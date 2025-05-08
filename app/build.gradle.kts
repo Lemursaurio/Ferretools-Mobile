@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    // Plugin de Gradle de Google Services
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -56,4 +58,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // BoM de Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+
+    // Firestore
+    implementation("com.google.firebase:firebase-firestore")
+
 }
