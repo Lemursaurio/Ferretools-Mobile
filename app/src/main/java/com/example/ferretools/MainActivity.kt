@@ -14,9 +14,9 @@ import com.example.ferretools.ui.navigation.NavGraph
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.model.Usuario
 import com.example.ferretools.model.enums.RolUsuario
-import com.example.ferretools.ui.theme.FerreToolsTheme
 import com.example.ferretools.model.Negocio
 import android.util.Log
+import com.example.ferretools.ui.theme.FerretoolsTheme
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -33,6 +33,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun MainScreen() {
+    FerretoolsTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            val navController = rememberNavController()
+            NavGraph(navController = navController)
+        }
+    }
+}
+
+//class MainActivity : ComponentActivity() {
+
+//  override fun onCreate(savedInstanceState: Bundle?) {
+//      super.onCreate(savedInstanceState)
 //         val db = Firebase.firestore
 
 //         val coleccion = "negocios"
@@ -76,18 +93,7 @@ class MainActivity : ComponentActivity() {
 //             }
 
    
-@Composable
-fun MainScreen() {
-    FerretoolsTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            val navController = rememberNavController()
-            NavGraph(navController = navController)
-        }
-    }
-}
+
 
 
 //class MainActivity : ComponentActivity() {

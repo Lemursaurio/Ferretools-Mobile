@@ -141,9 +141,7 @@ import androidx.compose.material.icons.Icons
 //import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.IconButton
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -156,7 +154,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.ferretools.ui.theme.FerreToolsTheme  // Ajusta a tu paquete real
+import com.example.ferretools.ui.theme.FerretoolsTheme
 
 @Composable
 fun SelectRoleScreen(
@@ -296,7 +294,7 @@ enum class UserRole {
 @Composable
 fun SelectRoleScreenPreview() {
     // Usa tu tema personalizado si lo tienes (reemplaza FerreToolsTheme con tu tema)
-    FerreToolsTheme {
+    FerretoolsTheme {
         SelectRoleScreen(
             onBack = {},
             onNextClick = { role ->
