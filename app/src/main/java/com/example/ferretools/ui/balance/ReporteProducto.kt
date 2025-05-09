@@ -35,9 +35,9 @@ import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.reporte.ResumenBox
 
 @Composable
-fun ReporteVentasComprasScreen(navController: NavController) {
+fun ReporteProductoScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopNavBar(navController, "Reporte de Ventas y Compras") }
+        topBar = { TopNavBar(navController, "Reporte por Producto") }
     ) { padding ->
 
         Column(
@@ -48,6 +48,19 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                 .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Botón de fecha
+            Button(
+                onClick = { /* Acción seleccionar fecha */ },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEB3B))
+            ) {
+                Text("Reporte de {compras/ventas} del producto XXXX", color = Color.Black)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
             // Selector de ventas/compras
             SelectorOpciones(
                 opcion1 = "Compras",
@@ -123,12 +136,12 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     ResumenBox(
-                        titulo = "Productos\ndiferentes",
+                        titulo = "Unidades\nvendidas",
                         valor = "XXXX",
                         porcentaje = "+15%"
                     )
                     ResumenBox(
-                        titulo = "Categorías\ndiferentes",
+                        titulo = "Total\nrecaudado",
                         valor = "XXXX",
                         porcentaje = "+15%"
                     )
@@ -139,12 +152,12 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     ResumenBox(
-                        titulo = "Productos\ntotales",
+                        titulo = "Porcentaje dentro\nde categoría",
                         valor = "XXXX",
                         porcentaje = "+15%"
                     )
                     ResumenBox(
-                        titulo = "Ganancias\ntotales",
+                        titulo = "Puesto dentro\nde categoría",
                         valor = "XXXX",
                         porcentaje = "+15%"
                     )
@@ -156,7 +169,7 @@ fun ReporteVentasComprasScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewReporteVentasComprasScreen() {
+fun PreviewReporteProductoScreen() {
     val navController = rememberNavController()
-    ReporteVentasComprasScreen(navController = navController)
+    ReporteProductoScreen(navController = navController)
 }
