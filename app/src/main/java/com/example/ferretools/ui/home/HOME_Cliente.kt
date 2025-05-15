@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,9 +17,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
-// Colores comunes
 private val GreenP = Color(0xFF22D366)
 private val GreenDark = Color(0xFF00BF59)
 private val Orange = Color(0xFFE65100)
@@ -27,7 +29,6 @@ private val TextPrimary = Color(0xFF333333)
 private val TextSecondary = Color.Gray
 private val BackgroundLight = Color(0xFFF8F8F8)
 
-// Data class
 data class PedidoCliente(
     val id: String,
     val fecha: String,
@@ -35,7 +36,61 @@ data class PedidoCliente(
     val total: String
 )
 
-// Header
+@Composable
+fun HOME_Cliente(
+    navController: NavController,
+    userName: String = "Cliente",
+    storeName: String = "Mi Tienda",
+    pedidosRecientes: List<PedidoCliente> = emptyList(),
+    selectedMenu: Int = 0,
+    // viewModel: HomeClienteViewModel = viewModel() // Para uso futuro
+) {
+    var menu by remember { mutableStateOf(selectedMenu) }
+
+    Scaffold(
+        topBar = { ClienteHeader(userName, storeName) },
+        bottomBar = {
+            ClienteBottomNavBar(selected = menu, onSelect = {
+                menu = it
+                when (it) {
+                    1 -> navController.navigate(AppRoutes.Client.CATALOG)
+                    2 -> navController.navigate(AppRoutes.Order.HISTORY)
+                    3 -> navController.navigate(AppRoutes.Config.MAIN)
+                    else -> {} // Inicio
+                }
+            })
+        },
+        backgroundColor = BackgroundLight
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                "¡Bienvenido, $userName!",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            ClienteQuickAccess(
+                onCatalogo = { navController.navigate(AppRoutes.Client.CATALOG) },
+                onCarrito = { navController.navigate(AppRoutes.Order.CART) },
+                onHistorial = { navController.navigate(AppRoutes.Order.HISTORY) }
+            )
+            Spacer(Modifier.height(24.dp))
+            PedidosRecientesCliente(
+                pedidos = pedidosRecientes,
+                onPedidoClick = { pedido ->
+                    navController.navigate(AppRoutes.Order.RECEIPT) // Puedes pasar el ID como parámetro si lo necesitas
+                }
+            )
+        }
+    }
+}
+
 @Composable
 fun ClienteHeader(userName: String, storeName: String) {
     Row(
@@ -62,7 +117,6 @@ fun ClienteHeader(userName: String, storeName: String) {
     }
 }
 
-// Accesos rápidos
 @Composable
 fun ClienteQuickAccess(
     onCatalogo: () -> Unit,
@@ -97,7 +151,6 @@ private fun QuickAccessButtonC(label: String, icon: ImageVector, onClick: () -> 
     }
 }
 
-// Pedidos recientes
 @Composable
 fun PedidosRecientesCliente(
     pedidos: List<PedidoCliente>,
@@ -155,7 +208,6 @@ fun PedidoCard(pedido: PedidoCliente, onClick: (PedidoCliente) -> Unit) {
     }
 }
 
-// Navegación inferior
 @Composable
 fun ClienteBottomNavBar(selected: Int, onSelect: (Int) -> Unit) {
     val items = listOf("Inicio", "Catálogo", "Historial", "Cuenta")
@@ -175,62 +227,16 @@ fun ClienteBottomNavBar(selected: Int, onSelect: (Int) -> Unit) {
     }
 }
 
-// Pantalla principal
-@Composable
-fun ClienteHomeScreen(
-    userName: String,
-    storeName: String,
-    pedidosRecientes: List<PedidoCliente>,
-    selectedMenu: Int,
-    onMenuSelect: (Int) -> Unit,
-    onCatalogo: () -> Unit,
-    onCarrito: () -> Unit,
-    onHistorial: () -> Unit,
-    onPedidoClick: (PedidoCliente) -> Unit
-) {
-    Scaffold(
-        topBar = { ClienteHeader(userName, storeName) },
-        bottomBar = { ClienteBottomNavBar(selected = selectedMenu, onSelect = onMenuSelect) },
-        backgroundColor = BackgroundLight
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            Spacer(Modifier.height(12.dp))
-            Text(
-                "¡Bienvenido, $userName!",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(Modifier.height(8.dp))
-            ClienteQuickAccess(onCatalogo, onCarrito, onHistorial)
-            Spacer(Modifier.height(16.dp))
-            PedidosRecientesCliente(pedidosRecientes, onPedidoClick)
-        }
-    }
-}
-
-// Vista previa
 @Preview(showBackground = true)
 @Composable
-fun ClienteHomeScreenPreview() {
-    val pedidosDemo = listOf(
-        PedidoCliente("1001", "2024-06-10", "Pendiente", "S/ 45.00"),
-        PedidoCliente("1002", "2024-06-12", "Pendiente", "S/ 30.00")
-    )
-    ClienteHomeScreen(
-        userName = "Carlos Ruiz",
-        storeName = "Bodega Central",
-        pedidosRecientes = pedidosDemo,
-        selectedMenu = 0,
-        onMenuSelect = {},
-        onCatalogo = {},
-        onCarrito = {},
-        onHistorial = {},
-        onPedidoClick = {}
+fun HOME_ClientePreview() {
+    val navController = rememberNavController()
+    HOME_Cliente(
+        navController = navController,
+        pedidosRecientes = listOf(
+            PedidoCliente("1", "2024-06-01", "Pendiente", "S/ 50.00"),
+            PedidoCliente("2", "2024-06-02", "Listo", "S/ 30.00"),
+            PedidoCliente("3", "2024-06-03", "Entregado", "S/ 20.00")
+        )
     )
 }

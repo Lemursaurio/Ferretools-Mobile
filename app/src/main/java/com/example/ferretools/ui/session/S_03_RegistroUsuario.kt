@@ -5,8 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
@@ -25,15 +27,18 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ferretools.R
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.R
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun RegisterUserScreen(
-    onBack: () -> Unit,
-    onRegister: (name: String, email: String, phone: String, password: String, imageUri: String?) -> Unit,
+fun S_03_RegistroUsuario(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: RegistroUsuarioViewModel = viewModel() // Para uso futuro
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -50,22 +55,65 @@ fun RegisterUserScreen(
     val areFieldsFilled = name.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank()
     val isFormValid = isEmailValid && isPasswordValid && doPasswordsMatch && areFieldsFilled
 
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .background(Color(0xFFF5F5F5))
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(onBack)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = Color(0xFF333333)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Title(text = "Crear Cuenta")
+        Text(
+            text = "Crear Cuenta",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1B5E20),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ProfileImage(imageUri)
+        Box(
+            modifier = Modifier
+                .size(90.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFE0E0E0))
+                .clickable { /* TODO: Selector de imagen */ },
+            contentAlignment = Alignment.Center
+        ) {
+            if (imageUri != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Imagen de perfil",
+                    modifier = Modifier.size(90.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Agregar imagen de perfil",
+                    tint = Color(0xFF757575),
+                    modifier = Modifier.size(36.dp)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -130,7 +178,12 @@ fun RegisterUserScreen(
         }
 
         Button(
-            onClick = { onRegister(name, email, phone, password, imageUri) },
+            onClick = {
+                // Aquí puedes llamar a tu ViewModel o lógica de registro
+                // viewModel.register(name, email, phone, password, imageUri)
+                // Por ahora, navega a la siguiente pantalla
+                navController.navigate(AppRoutes.Auth.REGISTER_BUSINESS)
+            },
             enabled = isFormValid && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,62 +201,7 @@ fun RegisterUserScreen(
 }
 
 @Composable
-private fun TopBar(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Volver",
-                tint = Color(0xFF333333)
-            )
-        }
-    }
-}
-
-@Composable
-private fun Title(text: String) {
-    Text(
-        text = text,
-        fontSize = 28.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color(0xFF1B5E20),
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
-}
-
-@Composable
-private fun ProfileImage(imageUri: String?) {
-    Box(
-        modifier = Modifier
-            .size(90.dp)
-            .clip(CircleShape)
-            .background(Color(0xFFE0E0E0))
-            .clickable { /* TODO: Selector de imagen */ },
-        contentAlignment = Alignment.Center
-    ) {
-        if (imageUri != null) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Imagen de perfil",
-                modifier = Modifier.size(90.dp)
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Agregar imagen de perfil",
-                tint = Color(0xFF757575),
-                modifier = Modifier.size(36.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun FormField(
+private fun FormField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -218,22 +216,22 @@ fun FormField(
         Text(
             text = label,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1B5E20),
-            fontSize = 15.sp,
+            color = Color(0xFF333333),
+            fontSize = 16.sp,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = Color(0xFFBDBDBD)) },
+            placeholder = { Text(placeholder, color = Color(0xFF999999)) },
             singleLine = true,
             isError = isError,
             visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = if (isPassword && onTogglePassword != null) {
                 {
-                    val icon = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff // Cambia por iconos de ojo si los tienes
+                    val icon = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
                     IconButton(onClick = onTogglePassword) {
-                        Icon(imageVector = icon, contentDescription = "Mostrar/Ocultar contraseña")
+                        Icon(imageVector = icon, contentDescription = if (showPassword) "Ocultar contraseña" else "Mostrar contraseña")
                     }
                 }
             } else null,
@@ -250,14 +248,9 @@ fun FormField(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun RegisterUserScreenPreview() {
-    RegisterUserScreen(
-        onBack = {},
-        onRegister = { _, _, _, _, _ -> },
-        isLoading = false,
-        errorMessage = null
-    )
+fun S_03_RegistroUsuarioPreview() {
+    val navController = rememberNavController()
+    S_03_RegistroUsuario(navController = navController)
 }

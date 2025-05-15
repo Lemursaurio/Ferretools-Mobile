@@ -3,25 +3,10 @@ package com.example.ferretools.ui.balance
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,16 +16,48 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
-import com.example.ferretools.ui.components.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.components.AdminBottomNavBar
 import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.UserDataBar
 import com.example.ferretools.ui.components.detalles_cv.CampoFechaSeleccion
 
+private val YellowPrimary = Color(0xFFFFEB3B)
+private val GreenLight = Color(0xFFB9F6CA)
+private val RedLight = Color(0xFFFF8A80)
+private val GreenText = Color(0xFF22D366)
+private val RedText = Color.Red
+private val CardBorder = Color.Black
+
+data class BalanceResumen(
+    val total: Double,
+    val ingresos: Double,
+    val egresos: Double
+)
+
+data class Movimiento(
+    val productos: String,
+    val fecha: String,
+    val monto: Double,
+    val metodo: String
+)
+
 @Composable
-fun VisualizarHistorialScreen(navController: NavController) {
+fun B_01_Balances(
+    navController: NavController,
+    // viewModel: BalanceViewModel = viewModel() // Para uso futuro
+) {
+    // Ejemplo de datos mockeados
+    val resumen = BalanceResumen(1200.0, 2000.0, 800.0)
+    val movimientos = listOf(
+        Movimiento("Arroz x2, Azúcar x1", "2024-06-10", 150.0, "Efectivo"),
+        Movimiento("Leche x3, Pan x5", "2024-06-11", 80.0, "Tarjeta")
+    )
+    var filtro by remember { mutableStateOf("Ingresos") }
+
     Scaffold(
-        topBar = { UserDataBar("Nombre de usuario","Nombre de tienda") },
-        bottomBar = { BottomNavBar(navController) }
+        topBar = { UserDataBar("Nombre de usuario", "Nombre de tienda") },
+        bottomBar = { AdminBottomNavBar(navController) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -48,19 +65,15 @@ fun VisualizarHistorialScreen(navController: NavController) {
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            // Fecha
-            Text("Fecha")
-
-            // Fecha
+            Text("Fecha", style = MaterialTheme.typography.titleMedium)
             CampoFechaSeleccion()
 
-            // Balance
-            Text("Balance", modifier = Modifier.padding(vertical = 8.dp))
+            Text("Balance", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(vertical = 8.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+                    .border(2.dp, CardBorder, RoundedCornerShape(12.dp))
                     .padding(20.dp)
             ) {
                 Column {
@@ -68,8 +81,8 @@ fun VisualizarHistorialScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Total")
-                        Text("\$XXXX")
+                        Text("Total", style = MaterialTheme.typography.bodyLarge)
+                        Text("S/ ${resumen.total}", style = MaterialTheme.typography.bodyLarge)
                     }
                     Divider(Modifier.padding(vertical = 8.dp))
                     Row(
@@ -77,12 +90,12 @@ fun VisualizarHistorialScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                            Text("Ingresos", color = Color.Green)
-                            Text("\$XXXX", color = Color.Green)
+                            Text("Ingresos", color = GreenText, style = MaterialTheme.typography.bodyMedium)
+                            Text("S/ ${resumen.ingresos}", color = GreenText, style = MaterialTheme.typography.bodyLarge)
                         }
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                            Text("Egresos", color = Color.Red)
-                            Text("\$XXXX", color = Color.Red)
+                            Text("Egresos", color = RedText, style = MaterialTheme.typography.bodyMedium)
+                            Text("S/ ${resumen.egresos}", color = RedText, style = MaterialTheme.typography.bodyLarge)
                         }
                     }
                     Divider(Modifier.padding(vertical = 8.dp))
@@ -91,14 +104,14 @@ fun VisualizarHistorialScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
-                            onClick = { /* Acción ver detalles */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEB3B))
+                            onClick = { navController.navigate(AppRoutes.Balance.DETAILS) },
+                            colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary)
                         ) {
                             Text("Ver detalles", color = Color.Black)
                         }
                         Button(
-                            onClick = { /* Acción PDF */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEB3B))
+                            onClick = { /* TODO: Exportar a PDF */ },
+                            colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary)
                         ) {
                             Text("Convertir a PDF", color = Color.Black)
                         }
@@ -108,33 +121,28 @@ fun VisualizarHistorialScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Selector de ingresos/egresos
             SelectorOpciones(
                 opcion1 = "Ingresos",
                 opcion2 = "Egresos",
-                seleccionado = ""
-            ) { /* TODO: Función de selección de valor */ }
+                seleccionado = filtro
+            ) { filtro = it }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Lista de movimientos
-            ListaMovimientos()
+            ListaMovimientos(movimientos = movimientos.filter {
+                if (filtro == "Ingresos") it.monto >= 0 else it.monto < 0
+            })
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { /* Acción reporte */ },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEB3B)),
-                modifier = Modifier.padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 246.dp
-                )
+                onClick = { navController.navigate(AppRoutes.Balance.REPORT) },
+                colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary),
+                modifier = Modifier.align(Alignment.End)
             ) {
                 Text("Reporte", color = Color.Black)
             }
 
-            // Botones de agregar venta/compra
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -142,14 +150,14 @@ fun VisualizarHistorialScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    onClick = { /* Acción agregar venta */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB9F6CA))
+                    onClick = { navController.navigate(AppRoutes.Sale.CART) },
+                    colors = ButtonDefaults.buttonColors(containerColor = GreenLight)
                 ) {
                     Text("Agregar venta", color = Color.Black)
                 }
                 Button(
-                    onClick = { /* Acción agregar compra */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF8A80))
+                    onClick = { navController.navigate(AppRoutes.Purchase.CART) },
+                    colors = ButtonDefaults.buttonColors(containerColor = RedLight)
                 ) {
                     Text("Agregar compra", color = Color.Black)
                 }
@@ -159,37 +167,41 @@ fun VisualizarHistorialScreen(navController: NavController) {
 }
 
 @Composable
-fun ListaMovimientos(modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        repeat(2) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
+fun ListaMovimientos(movimientos: List<Movimiento>, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+        if (movimientos.isEmpty()) {
+            Text("No hay movimientos.", style = MaterialTheme.typography.bodyLarge, color = Color.Gray)
+        } else {
+            movimientos.forEach { mov ->
+                Row(
                     modifier = Modifier
-                        .size(50.dp)
-                        .background(Color(0xFFE0E0E0), RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        painterResource(R.drawable.inventario),
-                        contentDescription = "Producto",
-                        modifier = Modifier.size(32.dp)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .background(Color(0xFFE0E0E0), RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painterResource(R.drawable.inventario),
+                            contentDescription = "Producto",
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(mov.productos, style = MaterialTheme.typography.bodyMedium)
+                        Text(mov.fecha, style = MaterialTheme.typography.labelSmall)
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text("S/ ${mov.monto}", style = MaterialTheme.typography.bodyLarge)
+                        Text(mov.metodo, style = MaterialTheme.typography.labelSmall)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("X Producto1,\nY Producto 2")
-                    Text("Fecha de Venta", style = MaterialTheme.typography.labelSmall)
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text("$ XXXX")
-                    Text("Efectivo")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
             }
         }
     }
@@ -197,7 +209,7 @@ fun ListaMovimientos(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewVisualizarHistorialScreen() {
+fun PreviewB_01_Balances() {
     val navController = rememberNavController()
-    VisualizarHistorialScreen(navController = navController)
+    B_01_Balances(navController = navController)
 }

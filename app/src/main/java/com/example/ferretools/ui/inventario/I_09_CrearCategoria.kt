@@ -1,46 +1,32 @@
 package com.example.ferretools.ui.inventario
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
+import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun CrearCategoriaScreen(
+fun I_09_CrearCategoria(
     navController: NavController,
     viewModel: InventarioViewModel = viewModel()
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val nombreCategoria = remember { mutableStateOf("") }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,10 +68,10 @@ fun CrearCategoriaScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
-                onClick = { 
+                onClick = {
                     if (nombreCategoria.value.isNotBlank()) {
                         viewModel.agregarCategoria(nombreCategoria.value)
-                        showDialog.value = true 
+                        showDialog.value = true
                     }
                 },
                 modifier = Modifier
@@ -117,42 +103,10 @@ fun CrearCategoriaScreen(
         }
     }
 }
-/*
-// Interfaz para el ViewModel mock
-interface InventarioViewModelInterface {
-    fun agregarCategoria(nombre: String)
-}
 
 @Preview(showBackground = true)
 @Composable
-fun CrearCategoriaScreenPreview() {
-    // Mock del ViewModel
-    val mockViewModel = object : InventarioViewModel {
-        override fun agregarCategoria(nombre: String) {
-            // Implementación mock vacía
-        }
-    }
-
-    // NavController mock
+fun I_09_CrearCategoriaPreview() {
     val navController = rememberNavController()
-
-    CrearCategoriaScreen(
-        navController = navController,
-        viewModel = mockViewModel
-    )
-}
-*/
-@Preview
-@Composable
-fun DialogPreview() {
-    AlertDialog(
-        onDismissRequest = { },
-        title = { Text("Categoría Creada") },
-        text = { Text("La categoría ha sido creada correctamente.") },
-        confirmButton = {
-            Button(onClick = { }) {
-                Text("Aceptar")
-            }
-        }
-    )
+    I_09_CrearCategoria(navController = navController)
 }

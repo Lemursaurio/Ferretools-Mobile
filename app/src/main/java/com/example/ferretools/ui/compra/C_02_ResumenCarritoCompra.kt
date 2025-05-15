@@ -22,18 +22,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
-import com.example.ferretools.ui.components.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.components.AdminBottomNavBar
 import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.detalles_cv.CampoFechaSeleccion
 import com.example.ferretools.ui.components.detalles_cv.ListaProductosSeleccionados
 
-
 @Composable
-fun DetallesCompraScreen(navController: NavController) {
+fun C_02_ResumenCarritoCompra(
+    navController: NavController,
+    // viewModel: ResumenCarritoCompraViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         topBar = { TopNavBar(navController, "Detalles de compra") },
-        bottomBar = { BottomNavBar(navController) }
+        bottomBar = { AdminBottomNavBar(navController) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -58,7 +61,6 @@ fun DetallesCompraScreen(navController: NavController) {
             Text("Medio de pago", Modifier.padding(vertical = 8.dp))
 
             // Medio de pago
-
             SelectorOpciones(
                 opcion1 = "Efectivo",
                 opcion2 = "Yape",
@@ -79,7 +81,9 @@ fun DetallesCompraScreen(navController: NavController) {
 
             // Total
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Total")
@@ -88,9 +92,9 @@ fun DetallesCompraScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón Confirmar Venta
+            // Botón Confirmar Compra
             Button(
-                onClick = { /* Acción confirmar */ },
+                onClick = { navController.navigate(AppRoutes.Purchase.RECEIPT) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -104,7 +108,7 @@ fun DetallesCompraScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun DetallesCompraScreenPreview() {
+fun C_02_ResumenCarritoCompraPreview() {
     val navController = rememberNavController()
-    DetallesCompraScreen(navController = navController)
+    C_02_ResumenCarritoCompra(navController = navController)
 }

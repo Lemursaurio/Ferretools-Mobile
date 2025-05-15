@@ -18,10 +18,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.ui.home.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.home.EmpleadoBottomNavBar
+
+// --- Constantes de Estilo ---
+private val GreenPrimary = Color(0xFF22D366)
+private val GreenSuccess = Color(0xFF00BF59)
+private val RedError = Color.Red
+private val BackgroundColor = Color(0xFFF8F8F8)
+private val TextPrimary = Color(0xFF333333)
+private val TextGray = Color.Gray
+private val CardElevation = 2.dp
 
 // --- DATA CLASS ---
 data class PedidoHistorial(
@@ -34,11 +43,16 @@ data class PedidoHistorial(
 
 // --- COMPONENTES UI ---
 @Composable
-fun AlmaceneroTopBar(navController: NavController, modifier: Modifier = Modifier) {
+fun AlmaceneroTopBar(
+    navController: NavController,
+    userName: String = "Nombre de Usuario",
+    storeName: String = "Nombre de la Tienda",
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFF22D366))
+            .background(GreenPrimary)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -57,18 +71,30 @@ fun AlmaceneroTopBar(navController: NavController, modifier: Modifier = Modifier
         }
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Text("Nombre de Usuario", color = Color.White, fontWeight = FontWeight.Bold)
-            Text("Nombre de la Tienda", color = Color.White, fontSize = 13.sp)
+            Text(
+                userName,
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                storeName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
+            )
         }
     }
 }
 
 @Composable
-fun PedidoHistorialCard(pedido: PedidoHistorial, onClick: () -> Unit) {
+fun PedidoHistorialCard(
+    pedido: PedidoHistorial,
+    onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = CardElevation),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
@@ -76,22 +102,44 @@ fun PedidoHistorialCard(pedido: PedidoHistorial, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    "Pedido #${pedido.id}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = pedido.estado,
-                    color = if (pedido.estado == "Entregado") Color(0xFF00BF59) else Color.Red,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
+                    color = when (pedido.estado) {
+                        "Entregado" -> GreenSuccess
+                        "Cancelado" -> RedError
+                        else -> TextGray
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Cliente: ${pedido.cliente}", fontSize = 14.sp)
-            Text("Fecha: ${pedido.fecha}", fontSize = 13.sp, color = Color.Gray)
+            Text(
+                "Cliente: ${pedido.cliente}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                "Fecha: ${pedido.fecha}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextGray
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Productos:", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+            Text(
+                "Productos:",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold
+            )
             pedido.productos.forEach { producto ->
-                Text("- $producto", fontSize = 13.sp)
+                Text(
+                    "- $producto",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
@@ -105,15 +153,16 @@ fun ListaHistorialPedidos(
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = "Historial de Pedidos",
-            fontSize = 22.sp,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333),
+            color = TextPrimary,
             modifier = Modifier.padding(vertical = 12.dp)
         )
         if (pedidos.isEmpty()) {
             Text(
                 text = "No hay pedidos en el historial.",
-                color = Color.Gray,
+                style = MaterialTheme.typography.bodyLarge,
+                color = TextGray,
                 modifier = Modifier.padding(16.dp)
             )
         } else {
@@ -128,22 +177,35 @@ fun ListaHistorialPedidos(
 
 // --- PANTALLA PRINCIPAL ---
 @Composable
-fun HistorialPedidosScreen(
+fun P_E1_HistorialPedidos(
     navController: NavController,
     pedidosHistorial: List<PedidoHistorial>,
-    onPedidoClick: (PedidoHistorial) -> Unit
+    onPedidoClick: (PedidoHistorial) -> Unit,
+    userName: String = "Nombre de Usuario",
+    storeName: String = "Nombre de la Tienda"
+    // viewModel: HistorialPedidosEmpleadoViewModel = viewModel() // Para uso futuro
 ) {
     Scaffold(
-        topBar = { AlmaceneroTopBar(navController) },
-        bottomBar = { BottomNavBar(navController) },
-        containerColor = Color(0xFFF8F8F8)
+        topBar = { AlmaceneroTopBar(navController, userName, storeName) },
+        bottomBar = { EmpleadoBottomNavBar(
+            onInicio = { /* Pantalla actual */ },
+            onInventario = { navController.navigate(AppRoutes.Inventory.LIST_PRODUCTS) },
+            onHistorial = { navController.navigate(AppRoutes.Order.Employee.HISTORY) },
+            onCuenta = { navController.navigate(AppRoutes.Config.MAIN) }) },
+        containerColor = BackgroundColor
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            ListaHistorialPedidos(pedidos = pedidosHistorial, onPedidoClick = onPedidoClick)
+            ListaHistorialPedidos(
+                pedidos = pedidosHistorial,
+                onPedidoClick = { pedido ->
+                    onPedidoClick(pedido)
+                    navController.navigate(AppRoutes.Order.Employee.DETAILS)
+                }
+            )
         }
     }
 }
@@ -151,7 +213,7 @@ fun HistorialPedidosScreen(
 // --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
-fun PreviewHistorialPedidosScreen() {
+fun PreviewP_E1_HistorialPedidos() {
     val navController = rememberNavController()
     val pedidosDemo = listOf(
         PedidoHistorial(
@@ -169,9 +231,11 @@ fun PreviewHistorialPedidosScreen() {
             estado = "Cancelado"
         )
     )
-    HistorialPedidosScreen(
+    P_E1_HistorialPedidos(
         navController = navController,
         pedidosHistorial = pedidosDemo,
-        onPedidoClick = {}
+        onPedidoClick = {},
+        userName = "Carlos Ruiz",
+        storeName = "Bodega Central"
     )
 }

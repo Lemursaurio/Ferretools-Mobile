@@ -4,34 +4,33 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
-
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun ChangePasswordScreen(
-    onPasswordChanged: () -> Unit,
+fun S_07_CambiarContrasena(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: CambiarContrasenaViewModel = viewModel() // Para uso futuro
 ) {
     var newPassword by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -115,7 +114,10 @@ fun ChangePasswordScreen(
         Button(
             onClick = {
                 showSuccess = true
-                onPasswordChanged()
+                // Aquí puedes llamar a tu ViewModel o lógica para cambiar la contraseña
+                // viewModel.changePassword(newPassword)
+                // Por ahora, navega a la pantalla de login
+                navController.navigate(AppRoutes.Auth.LOGIN)
             },
             enabled = isFormValid && !isLoading,
             modifier = Modifier
@@ -187,10 +189,7 @@ fun PasswordFormField(
 
 @Preview(showBackground = true)
 @Composable
-fun ChangePasswordScreenPreview() {
-    ChangePasswordScreen(
-        onPasswordChanged = {},
-        isLoading = false,
-        errorMessage = null
-    )
+fun S_07_CambiarContrasenaPreview() {
+    val navController = rememberNavController()
+    S_07_CambiarContrasena(navController = navController)
 }

@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,17 +26,23 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
-import com.example.ferretools.ui.components.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.components.AdminBottomNavBar
 import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.detalles_cv.CampoFechaSeleccion
 import com.example.ferretools.ui.components.detalles_cv.ListaProductosSeleccionados
 
 @Composable
-fun DetallesPedidoScreen(navController: NavController) {
+fun P_02_CarritoCliente(
+    navController: NavController,
+    // viewModel: CarritoClienteViewModel = viewModel() // Para uso futuro
+) {
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = { TopNavBar(navController, "Detalles de pedido") },
-        bottomBar = { BottomNavBar(navController) }
+        bottomBar = { AdminBottomNavBar(navController) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -40,7 +50,7 @@ fun DetallesPedidoScreen(navController: NavController) {
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            // Fecha de venta
+            // Fecha de pedido
             Text("Fecha de pedido")
 
             // Selección de fecha
@@ -62,8 +72,7 @@ fun DetallesPedidoScreen(navController: NavController) {
                 opcion2 =  "Yape",
                 opcion2Img = R.drawable.yape,
                 seleccionado = ""
-            )
-            { /* TODO: Función de selección de valor */ }
+            ) { /* TODO: Función de selección de valor */ }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -78,7 +87,9 @@ fun DetallesPedidoScreen(navController: NavController) {
 
             // Total
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Total")
@@ -87,9 +98,9 @@ fun DetallesPedidoScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón Confirmar Venta
+            // Botón Confirmar Pedido
             Button(
-                onClick = { /* Acción confirmar */ },
+                onClick = { showConfirmDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -98,12 +109,26 @@ fun DetallesPedidoScreen(navController: NavController) {
                 Text("Confirmar Pedido", color = Color.Black)
             }
         }
+
+        // Diálogo de confirmación
+        if (showConfirmDialog) {
+            P_03_ConfirmarPedido(
+                navController = navController,
+                onConfirm = {
+                    showConfirmDialog = false
+                    // Aquí puedes agregar lógica adicional antes de navegar
+                },
+                onDismiss = {
+                    showConfirmDialog = false
+                }
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DetallesPedidoScreenPreview() {
+fun P_02_CarritoClientePreview() {
     val navController = rememberNavController()
-    DetallesPedidoScreen(navController = navController)
+    P_02_CarritoCliente(navController = navController)
 }

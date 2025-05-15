@@ -5,27 +5,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun PasswordRecoveryScreen(
-    onBack: () -> Unit,
-    onSendCode: (String) -> Unit,
-    onContinue: (String) -> Unit,
+fun S_06_RecuperarContrasena(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: RecuperarContrasenaViewModel = viewModel() // Para uso futuro
 ) {
     var email by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
@@ -44,7 +46,7 @@ fun PasswordRecoveryScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBack) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Volver",
@@ -52,7 +54,6 @@ fun PasswordRecoveryScreen(
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
-            //
             Spacer(modifier = Modifier.width(48.dp)) // Para equilibrar el espacio del botón
         }
         Text(
@@ -60,7 +61,6 @@ fun PasswordRecoveryScreen(
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF333333),
-            //modifier = Modifier.weight(1f),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
@@ -117,7 +117,8 @@ fun PasswordRecoveryScreen(
             // Botón "Enviar código"
             TextButton(
                 onClick = {
-                    onSendCode(email)
+                    // Aquí puedes llamar a tu ViewModel o lógica para enviar el código
+                    // viewModel.sendCode(email)
                     codeSent = true
                 },
                 enabled = isEmailValid && !isLoading,
@@ -168,7 +169,12 @@ fun PasswordRecoveryScreen(
 
             // Botón principal "Continuar"
             Button(
-                onClick = { onContinue(code) },
+                onClick = {
+                    // Aquí puedes llamar a tu ViewModel o lógica para continuar
+                    // viewModel.verifyCode(code)
+                    // Por ahora, navega a la pantalla de cambiar contraseña
+                    navController.navigate(AppRoutes.Auth.CHANGE_PASSWORD)
+                },
                 enabled = isCodeValid && !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -202,12 +208,7 @@ fun PasswordRecoveryScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PasswordRecoveryScreenPreview() {
-    PasswordRecoveryScreen(
-        onBack = {},
-        onSendCode = {},
-        onContinue = {},
-        isLoading = false,
-        errorMessage = null
-    )
+fun S_06_RecuperarContrasenaPreview() {
+    val navController = rememberNavController()
+    S_06_RecuperarContrasena(navController = navController)
 }

@@ -1,16 +1,7 @@
 package com.example.ferretools.ui.compra
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
@@ -29,7 +20,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.ui.components.ConfirmationNavBar
 
 @Composable
-fun CompraExitosaScreen(navController: NavController) {
+fun C_04_CompraExitosa(
+    navController: NavController,
+    // viewModel: CompraExitosaViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         bottomBar = { ConfirmationNavBar(navController) }
     ) { padding ->
@@ -63,7 +57,7 @@ fun CompraExitosaScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewCompraExitosaScreen() {
+fun C_04_CompraExitosaPreview() {
     val navController = rememberNavController()
-    CompraExitosaScreen(navController = navController)
+    C_04_CompraExitosa(navController = navController)
 }

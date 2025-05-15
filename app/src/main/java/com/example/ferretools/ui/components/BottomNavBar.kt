@@ -14,15 +14,16 @@ import com.example.ferretools.R
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.navigation.AppRoutes
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun BottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
+fun AdminBottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
     NavigationBar(containerColor = Color(0xFF00BF59)) {
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(AppRoutes.Admin.DASHBOARD) },
             icon = { Image(painterResource(R.drawable.inicio), contentDescription = "Inicio") },
             label = { Text("Inicio",
                 fontSize = 16.sp, // Tamaño aumentado (original era ~12.sp)
@@ -32,7 +33,7 @@ fun BottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(AppRoutes.Balance.LIST) },
             icon = { Image(painterResource(R.drawable.documento), contentDescription = "Balance") },
             label = { Text("Balance",
                 fontSize = 16.sp, // Tamaño aumentado (original era ~12.sp)
@@ -42,7 +43,7 @@ fun BottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = {  },
+            onClick = { navController.navigate(AppRoutes.Inventory.LIST_PRODUCTS) },
             icon = { Image(painterResource(R.drawable.inventario), contentDescription = "Inventario") },
             label = { Text("Inventario",
                 fontSize = 16.sp, // Tamaño aumentado (original era ~12.sp)
@@ -52,7 +53,7 @@ fun BottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(AppRoutes.Config.MAIN) },
             icon = { Image(painterResource(R.drawable.cuenta), contentDescription = "Cuenta") },
             label = { Text("Cuenta",
                 fontSize = 16.sp, // Tamaño aumentado (original era ~12.sp)
@@ -66,11 +67,11 @@ fun BottomNavBar(navController: NavController, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
-fun BottomNavBarPreview() {
+fun AdminBottomNavBarPreview() {
     // Simulamos un NavController para la preview
     val mockNavController = rememberNavController()
 
-    BottomNavBar(
+    AdminBottomNavBar(
         navController = mockNavController,
         modifier = Modifier
     )

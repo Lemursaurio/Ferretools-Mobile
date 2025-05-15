@@ -5,11 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +19,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 private val GreenPrimary = Color(0xFF1B5E20)
 private val LightGrayBackground = Color(0xFFF5F5F5)
@@ -28,10 +30,11 @@ private val GrayPlaceholder = Color(0xFFBDBDBD)
 private val ButtonGreen = Color(0xFF2E7D32)
 
 @Composable
-fun RegisterBusinessScreen(
-    onFinish: (businessName: String, businessType: String, address: String, ruc: String, logoUri: String?) -> Unit,
+fun S_04_RegistroNegocio(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: RegistroNegocioViewModel = viewModel() // Para uso futuro
 ) {
     var businessName by remember { mutableStateOf("") }
     var businessType by remember { mutableStateOf("") }
@@ -48,6 +51,19 @@ fun RegisterBusinessScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = Color(0xFF333333)
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Detalles del negocio",
@@ -88,7 +104,12 @@ fun RegisterBusinessScreen(
         }
 
         Button(
-            onClick = { onFinish(businessName, businessType, address, ruc, logoUri) },
+            onClick = {
+                // Aquí puedes llamar a tu ViewModel o lógica de registro
+                // viewModel.registerBusiness(businessName, businessType, address, ruc, logoUri)
+                // Por ahora, navega a la pantalla de login
+                navController.navigate(AppRoutes.Auth.LOGIN)
+            },
             enabled = isFormValid && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,10 +177,7 @@ fun BusinessLogoPicker(logoUri: String?, onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterBusinessScreenPreview() {
-    RegisterBusinessScreen(
-        onFinish = { _, _, _, _, _ -> },
-        isLoading = false,
-        errorMessage = null
-    )
+fun S_04_RegistroNegocioPreview() {
+    val navController = rememberNavController()
+    S_04_RegistroNegocio(navController = navController)
 }

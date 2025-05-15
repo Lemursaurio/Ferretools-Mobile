@@ -3,12 +3,10 @@ package com.example.ferretools.ui.configuracion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,24 +16,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun AccountSettingsScreen(
+fun Config_01_Configuracion(
+    navController: NavController,
     userName: String,
     userLastName: String,
     userPhone: String,
     userEmail: String,
     isAdmin: Boolean = false,
-    onBack: () -> Unit,
-    onEditProfile: () -> Unit,
-    onChangeQr: () -> Unit,
-    onChangePassword: () -> Unit,
-    onLogout: () -> Unit,
-    onEditBusiness: (() -> Unit)? = null,
-    onToggleDarkMode: (Boolean) -> Unit,
-    onToggleStockNotification: (Boolean) -> Unit,
     darkModeEnabled: Boolean,
-    stockNotificationEnabled: Boolean
+    stockNotificationEnabled: Boolean,
+    // viewModel: ConfiguracionViewModel = viewModel() // Para uso futuro
 ) {
     Column(
         modifier = Modifier
@@ -50,11 +45,11 @@ fun AccountSettingsScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBack) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color(0xFF333333))
             }
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = onEditProfile) {
+            IconButton(onClick = { navController.navigate(AppRoutes.Config.EDIT_PROFILE) }) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar perfil", tint = Color(0xFF2E7D32))
             }
         }
@@ -79,12 +74,12 @@ fun AccountSettingsScreen(
 
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            if (isAdmin && onEditBusiness != null) {
+            if (isAdmin) {
                 SettingsItem(
                     icon = Icons.Default.Warehouse,
                     text = "Editar datos del negocio",
                     color = Color(0xFF2E7D32),
-                    onClick = onEditBusiness
+                    onClick = { navController.navigate(AppRoutes.Config.EDIT_BUSINESS) }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }
@@ -93,7 +88,7 @@ fun AccountSettingsScreen(
                 icon = Icons.Default.QrCode,
                 text = "Cambiar QR de Yape",
                 color = Color(0xFF16A34A),
-                onClick = onChangeQr
+                onClick = { navController.navigate(AppRoutes.Config.CHANGE_QR) }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -101,7 +96,7 @@ fun AccountSettingsScreen(
                 icon = Icons.Default.DarkMode,
                 text = "Modo oscuro",
                 checked = darkModeEnabled,
-                onCheckedChange = onToggleDarkMode
+                onCheckedChange = { /* TODO: Implementar lógica de cambio de modo oscuro */ }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -109,7 +104,7 @@ fun AccountSettingsScreen(
                 icon = Icons.Default.Notifications,
                 text = "Notificación de Stock bajo",
                 checked = stockNotificationEnabled,
-                onCheckedChange = onToggleStockNotification
+                onCheckedChange = { /* TODO: Implementar lógica de notificación de stock */ }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -117,7 +112,7 @@ fun AccountSettingsScreen(
                 icon = Icons.Default.Lock,
                 text = "Cambiar Contraseña",
                 color = Color(0xFF2563EB),
-                onClick = onChangePassword
+                onClick = { navController.navigate(AppRoutes.Config.CHANGE_PASSWORD) }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -125,7 +120,7 @@ fun AccountSettingsScreen(
                 icon = Icons.Default.ExitToApp,
                 text = "Cerrar Sesión",
                 color = Color(0xFFDC2626),
-                onClick = onLogout
+                onClick = { navController.navigate(AppRoutes.Config.CONFIRM_LOGOUT) }
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
@@ -199,35 +194,30 @@ fun UserContactInfo(icon: ImageVector, value: String) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = Color(0xFF555555),
+            tint = Color(0xFF757575),
             modifier = Modifier.size(18.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = value, fontSize = 16.sp, color = Color(0xFF555555))
+        Text(
+            text = value,
+            fontSize = 15.sp,
+            color = Color(0xFF757575)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AccountSettingsScreenPreview() {
-    var darkMode by remember { mutableStateOf(false) }
-    var stockNotif by remember { mutableStateOf(true) }
-
-    AccountSettingsScreen(
+fun Config_01_ConfiguracionPreview() {
+    val navController = rememberNavController()
+    Config_01_Configuracion(
+        navController = navController,
         userName = "Juan",
         userLastName = "Pérez",
-        userPhone = "+51 999 888 777",
+        userPhone = "987654321",
         userEmail = "juan.perez@email.com",
         isAdmin = true,
-        onBack = {},
-        onEditProfile = {},
-        onChangeQr = {},
-        onChangePassword = {},
-        onLogout = {},
-        onEditBusiness = {},
-        onToggleDarkMode = { darkMode = it },
-        onToggleStockNotification = { stockNotif = it },
-        darkModeEnabled = darkMode,
-        stockNotificationEnabled = stockNotif
+        darkModeEnabled = false,
+        stockNotificationEnabled = true
     )
 }

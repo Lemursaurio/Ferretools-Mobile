@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.ferretools.ui.home.HomeScreen
-import com.example.ferretools.ui.inventario.InventarioScreen
-import com.example.ferretools.ui.inventario.ReporteScreen
-import com.example.ferretools.ui.inventario.CategoriasScreen
-import com.example.ferretools.ui.inventario.ProductosCategoriaScreen
-import com.example.ferretools.ui.inventario.AgregarProductoScreen
-import com.example.ferretools.ui.inventario.CrearCategoriaScreen
+import com.example.ferretools.ui.home.HOME_Admin
+import com.example.ferretools.ui.inventario.I_01_ListaProductos
+import com.example.ferretools.ui.inventario.I_12_ReporteInventario
+import com.example.ferretools.ui.inventario.I_08_ListaCategorias
+import com.example.ferretools.ui.inventario.I_10_DetallesCategoria
+import com.example.ferretools.ui.inventario.I_02_AgregarProducto
+import com.example.ferretools.ui.inventario.I_09_CrearCategoria
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -19,28 +19,28 @@ fun NavGraph(navController: NavHostController) {
         startDestination = "home"
     ) {
         composable("home") {
-            HomeScreen(navController)
+            HOME_Admin(navController)
         }
         composable("inventario") {
-            InventarioScreen(navController)
+            I_01_ListaProductos(navController)
         }
         composable("reporte") {
-            ReporteScreen()
+            I_12_ReporteInventario()
         }
         composable("categorias") {
-            CategoriasScreen(navController)
+            I_08_ListaCategorias(navController)
         }
         composable("productos_categoria/{categoria}") { backStackEntry ->
-            ProductosCategoriaScreen(
+            I_10_DetallesCategoria(
                 navController = navController,
                 categoria = backStackEntry.arguments?.getString("categoria") ?: ""
             )
         }
         composable("agregar_producto") {
-            AgregarProductoScreen(navController)
+            I_02_AgregarProducto(navController)
         }
         composable("crear_categoria") {
-            CrearCategoriaScreen(navController)
+            I_09_CrearCategoria(navController)
         }
     }
 } 

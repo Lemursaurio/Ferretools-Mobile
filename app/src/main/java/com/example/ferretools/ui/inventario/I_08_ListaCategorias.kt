@@ -17,10 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun CategoriasScreen(
+fun I_08_ListaCategorias(
     navController: NavController,
     viewModel: InventarioViewModel = viewModel()
 ) {
@@ -76,7 +79,7 @@ fun CategoriasScreen(
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navController.navigate("crear_categoria") },
+                onClick = { navController.navigate(AppRoutes.Inventory.ADD_CATEGORY) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -98,7 +101,7 @@ fun CategoriasScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .clickable { navController.navigate("productos_categoria/${categoria}") },
+                        .clickable { navController.navigate("${AppRoutes.Inventory.LIST_PRODUCTS}/${categoria}") },
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -126,4 +129,11 @@ fun CategoriasScreen(
             }
         }
     }
-} 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun I_08_ListaCategoriasPreview() {
+    val navController = rememberNavController()
+    I_08_ListaCategorias(navController = navController)
+}

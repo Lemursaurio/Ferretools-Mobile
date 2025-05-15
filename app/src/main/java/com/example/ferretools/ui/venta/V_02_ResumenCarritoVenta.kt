@@ -22,17 +22,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
-import com.example.ferretools.ui.components.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.components.AdminBottomNavBar
 import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.detalles_cv.CampoFechaSeleccion
 import com.example.ferretools.ui.components.detalles_cv.ListaProductosSeleccionados
 
 @Composable
-fun DetallesVentaScreen(navController: NavController) {
+fun V_02_ResumenCarritoVenta(
+    navController: NavController,
+    // viewModel: ResumenCarritoVentaViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         topBar = { TopNavBar(navController, "Detalles de venta") },
-        bottomBar = { BottomNavBar(navController) }
+        bottomBar = { AdminBottomNavBar(navController) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -62,8 +66,7 @@ fun DetallesVentaScreen(navController: NavController) {
                 opcion2 = "Yape",
                 opcion2Img = R.drawable.yape,
                 seleccionado = ""
-            )
-            { /* TODO: Función de selección de valor */ }
+            ) { /* TODO: Función de selección de valor */ }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -78,7 +81,9 @@ fun DetallesVentaScreen(navController: NavController) {
 
             // Total
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Total")
@@ -89,7 +94,7 @@ fun DetallesVentaScreen(navController: NavController) {
 
             // Botón Confirmar Venta
             Button(
-                onClick = { /* Acción confirmar */ },
+                onClick = { navController.navigate(AppRoutes.Sale.RECEIPT) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -103,7 +108,7 @@ fun DetallesVentaScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun DetallesVentaScreenPreview() {
+fun V_02_ResumenCarritoVentaPreview() {
     val navController = rememberNavController()
-    DetallesVentaScreen(navController = navController)
+    V_02_ResumenCarritoVenta(navController = navController)
 }

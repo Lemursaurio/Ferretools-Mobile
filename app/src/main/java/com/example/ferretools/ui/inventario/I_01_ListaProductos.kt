@@ -19,11 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.ui.components.*
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun InventarioScreen(
+fun I_01_ListaProductos(
     navController: NavController,
     viewModel: InventarioViewModel = viewModel()
 ) {
@@ -61,7 +64,7 @@ fun InventarioScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = { navController.navigate("reporte") },
+                onClick = { navController.navigate(AppRoutes.Inventory.INVENTORY_REPORT) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF5F5F5)),
                 shape = RoundedCornerShape(6.dp),
                 contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp)
@@ -151,7 +154,7 @@ fun InventarioScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { navController.navigate("agregar_producto") },
+                onClick = { navController.navigate(AppRoutes.Inventory.ADD_PRODUCT) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -162,7 +165,7 @@ fun InventarioScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { navController.navigate("categorias") },
+                onClick = { navController.navigate(AppRoutes.Inventory.LIST_CATEGORIES) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -173,6 +176,13 @@ fun InventarioScreen(
             }
         }
         // Barra de navegación inferior (fija)
-        BottomNavBar(navController)
+        AdminBottomNavBar(navController)
     }
-} 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun I_01_ListaProductosPreview() {
+    val navController = rememberNavController()
+    I_01_ListaProductos(navController = navController)
+}

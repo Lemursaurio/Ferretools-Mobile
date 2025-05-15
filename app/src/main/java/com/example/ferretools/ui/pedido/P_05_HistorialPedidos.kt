@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.ui.home.ClienteBottomNavBar
 import com.example.ferretools.ui.home.ClienteHeader
 import com.example.ferretools.ui.home.PedidoCliente
@@ -50,11 +52,14 @@ fun ClienteHistorialTopBar(navController: NavController, text: String) {
 }*/
 
 @Composable
-fun PedidoClienteHistorialCard(pedido: PedidoCliente, onClick: () -> Unit) {
+fun PedidoClienteHistorialCard(
+    pedido: PedidoCliente,
+    onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color.White,
-        elevation = CardElevation,
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = CardElevation),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
@@ -65,9 +70,20 @@ fun PedidoClienteHistorialCard(pedido: PedidoCliente, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.weight(1f)) {
-                Text("Pedido #${pedido.id}", fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Text("Fecha: ${pedido.fecha}", fontSize = 13.sp, color = TextGray)
-                Text("Total: ${pedido.total}", fontSize = 13.sp)
+                Text(
+                    "Pedido #${pedido.id}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "Fecha: ${pedido.fecha}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextGray
+                )
+                Text(
+                    "Total: ${pedido.total}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
             Text(
                 text = pedido.estado,
@@ -76,8 +92,8 @@ fun PedidoClienteHistorialCard(pedido: PedidoCliente, onClick: () -> Unit) {
                     "Listo" -> GreenSecondary
                     else -> OrangeStatus
                 },
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -91,7 +107,7 @@ fun ListaHistorialPedidosCliente(
     Column(Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = "Historial de Pedidos",
-            fontSize = 22.sp,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
             modifier = Modifier.padding(vertical = 12.dp)
@@ -100,6 +116,7 @@ fun ListaHistorialPedidosCliente(
         if (pedidos.isEmpty()) {
             Text(
                 text = "No hay pedidos en el historial.",
+                style = MaterialTheme.typography.bodyLarge,
                 color = TextGray,
                 modifier = Modifier.padding(16.dp)
             )
@@ -116,20 +133,20 @@ fun ListaHistorialPedidosCliente(
 }
 
 @Composable
-fun ClienteHistorialPedidosScreen(
+fun P_05_HistorialPedidos(
     userName: String,
     storeName: String,
-    //navController: NavController,
+    navController: NavController,
     pedidosHistorial: List<PedidoCliente>,
     selectedMenu: Int,
     onMenuSelect: (Int) -> Unit,
     onPedidoClick: (PedidoCliente) -> Unit
+    // viewModel: HistorialPedidosViewModel = viewModel() // Para uso futuro
 ) {
     Scaffold(
         topBar = { ClienteHeader(userName, storeName) },
-        //topBar = { ClienteHistorialTopBar(navController, text = "Historial de Pedidos") },
         bottomBar = { ClienteBottomNavBar(selected = selectedMenu, onSelect = onMenuSelect) },
-        backgroundColor = BackgroundColor
+        containerColor = BackgroundColor
     ) { padding ->
         Column(
             modifier = Modifier
@@ -138,7 +155,10 @@ fun ClienteHistorialPedidosScreen(
         ) {
             ListaHistorialPedidosCliente(
                 pedidos = pedidosHistorial,
-                onPedidoClick = onPedidoClick
+                onPedidoClick = { pedido ->
+                    onPedidoClick(pedido)
+                    navController.navigate(AppRoutes.Order.RECEIPT)
+                }
             )
         }
     }
@@ -146,7 +166,7 @@ fun ClienteHistorialPedidosScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ClienteHistorialPedidosScreenPreview() {
+fun P_05_HistorialPedidosPreview() {
     val navController = rememberNavController()
     val pedidosDemo = listOf(
         PedidoCliente("1001", "2024-06-10", "Entregado", "S/ 45.00"),
@@ -154,10 +174,10 @@ fun ClienteHistorialPedidosScreenPreview() {
         PedidoCliente("1003", "2024-06-13", "En preparación", "S/ 20.00")
     )
 
-    ClienteHistorialPedidosScreen(
+    P_05_HistorialPedidos(
         userName = "Carlos Ruiz",
         storeName = "Bodega Central",
-        //navController = navController,
+        navController = navController,
         pedidosHistorial = pedidosDemo,
         selectedMenu = 0,
         onMenuSelect = {},
