@@ -3,7 +3,7 @@ package com.example.ferretools.ui.inventario
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateListOf
 
-class InventarioViewModel : ViewModel() {
+open class InventarioViewModel : ViewModel() {
     private val _categorias = mutableStateListOf<String>()
     val categorias: List<String> = _categorias
 
@@ -18,7 +18,7 @@ class InventarioViewModel : ViewModel() {
         ))
     }
 
-    fun agregarCategoria(nombre: String) {
+    open fun agregarCategoria(nombre: String) {
         if (nombre.isNotBlank()) {
             _categorias.add(nombre)
         }

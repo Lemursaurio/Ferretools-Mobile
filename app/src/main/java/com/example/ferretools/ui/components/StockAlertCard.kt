@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun StockAlertCard(productName: String, units: Int, bgColor: Color) {
@@ -27,4 +28,35 @@ fun StockAlertCard(productName: String, units: Int, bgColor: Color) {
             Text("Quedan $units unidades.", color = Color.Black)
         }
     }
-} 
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+fun StockAlertCardPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // Ejemplo de alerta crítica (rojo)
+        StockAlertCard(
+            productName = "Martillo profesional",
+            units = 2,
+            bgColor = Color(0xFFFF8A80) // Rojo claro
+        )
+
+        // Ejemplo de alerta moderada (amarillo)
+        StockAlertCard(
+            productName = "Tornillos 5mm",
+            units = 5,
+            bgColor = Color(0xFFFFF176) // Amarillo claro
+        )
+
+        // Ejemplo de stock normal (verde)
+        StockAlertCard(
+            productName = "Pintura blanca",
+            units = 15,
+            bgColor = Color(0xFF81C784) // Verde claro
+        )
+    }
+}
