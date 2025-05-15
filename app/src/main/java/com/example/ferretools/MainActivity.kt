@@ -10,17 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.ui.navigation.NavGraph
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.ferretools.model.Usuario
-import com.example.ferretools.model.enums.RolUsuario
-import com.example.ferretools.model.Negocio
-import android.util.Log
-import com.example.ferretools.ui.theme.FerretoolsTheme
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.ktx.firestore
+import com.example.ferretools.navigation.NavGraph
+import com.example.ferretools.theme.FerretoolsTheme
 
 class MainActivity : ComponentActivity() {
 
