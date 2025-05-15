@@ -1,10 +1,12 @@
 package com.example.ferretools.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -14,14 +16,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.ui.components.*
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HOME_Admin(
+    navController: NavController,
+    // viewModel: HomeAdminViewModel = viewModel() // Para uso futuro
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,20 +83,35 @@ fun HomeScreen(navController: NavController) {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ShortcutButton("Venta", Icons.Default.ShoppingCart, Color(0xFF22D366))
-            ShortcutButton("Gasto", Icons.Default.Person, Color(0xFF22D366))
-            ShortcutButton("Inventario", Icons.Default.List, Color(0xFF22D366))
+            /*
+            ShortcutButton("Venta", Icons.Default.ShoppingCart, Color(0xFF22D366)) {
+                navController.navigate(AppRoutes.Sale.CART)
+            }
+            ShortcutButton("Gasto", Icons.Default.Person, Color(0xFF22D366)) {
+                navController.navigate(AppRoutes.Purchase.CART)
+            }
+            ShortcutButton("Inventario", Icons.Default.List, Color(0xFF22D366)) {
+                navController.navigate(AppRoutes.Inventory.LIST_PRODUCTS)
+            }
+*/
+            AdminQuickAccess(
+                onVenta = { navController.navigate(AppRoutes.Sale.CART) },
+                onGasto = { navController.navigate(AppRoutes.Purchase.CART) },
+                onInventario = { navController.navigate(AppRoutes.Inventory.LIST_PRODUCTS) }
+            )
         }
         Spacer(modifier = Modifier.height(12.dp))
         // Alertas de Stock
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Alertas de Stock", fontWeight = FontWeight.Bold, fontSize = 20.sp)
             Button(
-                onClick = { /* TODO: Acción de reporte */ },
+                onClick = { navController.navigate(AppRoutes.Inventory.INVENTORY_REPORT) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFE082)),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp)
@@ -103,6 +127,52 @@ fun HomeScreen(navController: NavController) {
         }
         Box(modifier = Modifier.weight(1f)) {}
         // Barra de navegación inferior
-        BottomNavBar(navController)
+        AdminBottomNavBar(navController)
     }
-} 
+}
+
+@Composable
+fun AdminQuickAccess(
+    onVenta: () -> Unit,
+    onGasto: () -> Unit,
+    onInventario: () -> Unit
+) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
+        /*Text(
+            "Accesos Rápidos",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333)
+        )*/
+        Spacer(Modifier.height(12.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            QuickAccessButtonE("Venta", Icons.Default.ShoppingCart, onVenta)
+            QuickAccessButtonE("Gasto", Icons.Default.Person, onGasto)
+            QuickAccessButtonE("Tienda", Icons.Default.List, onInventario)
+        }
+    }
+}
+
+@Composable
+fun QuickAccessButtonA(label: String, icon: ImageVector, onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .background(Color(0xFF22D366), shape = RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+    ) {
+        Icon(icon, contentDescription = label, tint = Color.Black, modifier = Modifier.size(32.dp))
+        Text(label, fontWeight = FontWeight.Bold, color = Color.Black)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HOME_AdminPreview() {
+    val navController = rememberNavController()
+    HOME_Admin(navController = navController)
+}

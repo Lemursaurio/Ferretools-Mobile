@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,15 +23,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.boleta.BoletaNavBar
 import com.example.ferretools.ui.components.boleta.DetalleProductoFila
 
+// --- Data Class para la Boleta ---
+data class BoletaPedido(
+    val fecha: String,
+    val medioPago: String,
+    val productos: List<ProductoBoleta>,
+    val total: String
+)
+
+data class ProductoBoleta(
+    val nombre: String,
+    val cantidad: String,
+    val precio: String
+)
+
 @Composable
-fun BoletaPedidoScreen(navController: NavController) {
+fun P_06_BoletaPedido(
+    navController: NavController,
+    // viewModel: BoletaPedidoViewModel = viewModel() // Para uso futuro
+) {
+    // Datos de ejemplo - En el futuro vendrán del ViewModel
+    val boleta = BoletaPedido(
+        fecha = "10/06/2024",
+        medioPago = "Efectivo",
+        productos = listOf(
+            ProductoBoleta("Producto 01", "1", "S/ 15.00"),
+            ProductoBoleta("Producto 02", "2", "S/ 30.00"),
+            ProductoBoleta("Producto 03", "15", "S/ 225.00")
+        ),
+        total = "S/ 270.00"
+    )
+
     Scaffold(
         topBar = { TopNavBar(navController, "Boleta de pedido") }
     ) { padding ->
@@ -60,40 +89,82 @@ fun BoletaPedidoScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column {
-                            Text("Fecha de pedido", fontSize = 14.sp)
-                            Text("Medio de pago", fontSize = 14.sp)
+                            Text(
+                                "Fecha de pedido",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                "Medio de pago",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                         Column {
-                            Text("Fecha de pedido", fontSize = 14.sp)
-                            Text("Medio de pago", fontSize = 14.sp)
+                            Text(
+                                boleta.fecha,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                boleta.medioPago,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Productos:", fontWeight = FontWeight.Bold)
+                    Text(
+                        "Productos:",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     // Tabla de productos
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Nombre", fontWeight = FontWeight.Bold)
-                        Text("Cantidad", fontWeight = FontWeight.Bold)
-                        Text("Precio", fontWeight = FontWeight.Bold)
+                        Text(
+                            "Nombre",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            "Cantidad",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            "Precio",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Divider()
                     // Productos
-                    DetalleProductoFila("Producto 01", "1", "$ XX.XX")
-                    DetalleProductoFila("Producto 02", "2", "$ XX.XX")
-                    DetalleProductoFila("Producto 03", "15", "$ XX.XX")
+                    boleta.productos.forEach { producto ->
+                        DetalleProductoFila(
+                            nombre = producto.nombre,
+                            cantidad = producto.cantidad,
+                            precio = producto.precio
+                        )
+                    }
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
                     // Total
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("TOTAL", fontWeight = FontWeight.Bold)
-                        Text("$ XX.XX", fontWeight = FontWeight.Bold)
+                        Text(
+                            "TOTAL",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            boleta.total,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -101,14 +172,14 @@ fun BoletaPedidoScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             // Acciones
-            BoletaNavBar()
+            BoletaNavBar(navController)
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBoletaPedidoScreen() {
+fun PreviewP_06_BoletaPedido() {
     val navController = rememberNavController()
-    BoletaPedidoScreen(navController = navController)
+    P_06_BoletaPedido(navController = navController)
 }

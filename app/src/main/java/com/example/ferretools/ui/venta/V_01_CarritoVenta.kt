@@ -1,14 +1,7 @@
 package com.example.ferretools.ui.venta
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
@@ -22,7 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.ui.components.BottomNavBar
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.ui.components.AdminBottomNavBar
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.seleccion_productos.CartaProducto
 import com.example.ferretools.ui.components.seleccion_productos.ScanButton
@@ -30,13 +24,16 @@ import com.example.ferretools.ui.components.seleccion_productos.SearchBar
 import com.example.ferretools.ui.components.seleccion_productos.SelectorCategoria
 
 @Composable
-fun SeleccionVentaScreen(navController: NavController) {
+fun V_01_CarritoVenta(
+    navController: NavController,
+    // viewModel: CarritoVentaViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         topBar = {
             TopNavBar(navController, "Selección de producto vendido")
         },
         bottomBar = {
-            BottomNavBar(navController, Modifier.size(40.dp))
+            AdminBottomNavBar(navController, Modifier.size(40.dp))
         }
     ) { padding ->
         Column(
@@ -48,14 +45,15 @@ fun SeleccionVentaScreen(navController: NavController) {
             // Buscador y escáner de barras
             Row {
                 SearchBar(Modifier.weight(0.80f))
-                ScanButton(Modifier
-                    .padding(
-                        top = 14.dp,
-                        start = 10.dp
-                    )
-                    .weight(0.20f)
-                    .size(45.dp)
-                    .clickable { /* TODO: Pantalla de Escanear producto */ }
+                ScanButton(
+                    Modifier
+                        .padding(
+                            top = 14.dp,
+                            start = 10.dp
+                        )
+                        .weight(0.20f)
+                        .size(45.dp)
+                        .clickable { /* TODO: Pantalla de Escanear producto */ }
                 )
             }
 
@@ -77,7 +75,7 @@ fun SeleccionVentaScreen(navController: NavController) {
             }
             // Botón Continuar
             Button(
-                onClick = { /* Acción continuar */ },
+                onClick = { navController.navigate(AppRoutes.Sale.CART_SUMMARY) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -89,11 +87,9 @@ fun SeleccionVentaScreen(navController: NavController) {
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
-fun SeleccionVentaScreenPreview() {
+fun V_01_CarritoVentaPreview() {
     val navController = rememberNavController()
-    SeleccionVentaScreen(navController = navController)
+    V_01_CarritoVenta(navController = navController)
 }

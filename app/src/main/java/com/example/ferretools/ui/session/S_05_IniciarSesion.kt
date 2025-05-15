@@ -6,29 +6,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
-// Colores reutilizables
 private val PrimaryColor = Color(0xFF2E7D32)
 private val TextColor = Color(0xFF1B5E20)
 private val HintColor = Color(0xFFBDBDBD)
@@ -37,12 +35,11 @@ private val GrayText = Color(0xFF757575)
 private val DividerColor = Color(0xFFBDBDBD).copy(alpha = 0.5f)
 
 @Composable
-fun LoginScreen(
-    onLogin: (email: String, password: String) -> Unit,
-    onForgotPassword: () -> Unit,
-    onRegister: () -> Unit,
+fun S_05_IniciarSesion(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: IniciarSesionViewModel = viewModel() // Para uso futuro
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -99,7 +96,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
         Divider(color = DividerColor, thickness = 1.dp)
-        ForgotPasswordLink(onClick = onForgotPassword)
+        ForgotPasswordLink(onClick = { navController.navigate(AppRoutes.Auth.RECOVER_PASSWORD) })
         Divider(color = DividerColor, thickness = 1.dp)
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -112,10 +109,15 @@ fun LoginScreen(
             )
         }
 
-        LoginButton(isFormValid && !isLoading) { onLogin(email, password) }
+        LoginButton(isFormValid && !isLoading) {
+            // Aquí puedes llamar a tu ViewModel o lógica de login
+            // viewModel.login(email, password)
+            // Por ahora, navega a la pantalla principal del admin (puedes cambiarlo según el rol)
+            navController.navigate(AppRoutes.Admin.DASHBOARD)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
-        RegisterLink(onClick = onRegister)
+        RegisterLink(onClick = { navController.navigate(AppRoutes.Auth.REGISTER_USER) })
     }
 }
 
@@ -150,7 +152,7 @@ fun LoginFormField(
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = if (isPassword && onTogglePassword != null) {
                 {
-                    val icon = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff // Cambia por iconos de ojo si los tienes
+                    val icon = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
                     IconButton(onClick = onTogglePassword) {
                         Icon(imageVector = icon, contentDescription = if (showPassword) "Ocultar contraseña" else "Mostrar contraseña")
                     }
@@ -234,12 +236,7 @@ fun RegisterLink(onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    LoginScreen(
-        onLogin = { _, _ -> },
-        onForgotPassword = {},
-        onRegister = {},
-        isLoading = false,
-        errorMessage = null
-    )
+fun S_05_IniciarSesionPreview() {
+    val navController = rememberNavController()
+    S_05_IniciarSesion(navController = navController)
 }

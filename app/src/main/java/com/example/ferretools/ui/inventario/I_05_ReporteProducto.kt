@@ -3,22 +3,10 @@ package com.example.ferretools.ui.inventario
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +21,13 @@ import com.example.ferretools.R
 import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.reporte.ResumenBox
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun ReporteProductoScreen(navController: NavController) {
+fun I_05_ReporteProducto(
+    navController: NavController,
+    // viewModel: ReporteProductoViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         topBar = { TopNavBar(navController, "Reporte por Producto") }
     ) { padding ->
@@ -60,7 +52,6 @@ fun ReporteProductoScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             // Selector de ventas/compras
             SelectorOpciones(
                 opcion1 = "Compras",
@@ -74,7 +65,7 @@ fun ReporteProductoScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(240.dp) // Aumenta la altura si es necesario
+                    .height(240.dp)
                     .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
@@ -169,7 +160,7 @@ fun ReporteProductoScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewReporteProductoScreen() {
+fun I_05_ReporteProductoPreview() {
     val navController = rememberNavController()
-    ReporteProductoScreen(navController = navController)
+    I_05_ReporteProducto(navController = navController)
 }

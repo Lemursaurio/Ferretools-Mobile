@@ -4,20 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -26,13 +22,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ChangePasswordSettingsScreen(
-    onBack: () -> Unit,
-    onPasswordChanged: () -> Unit,
+fun Config_05_CambiarContrasena(
+    navController: NavController,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: CambiarContrasenaViewModel = viewModel() // Para uso futuro
 ) {
     var currentPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
@@ -56,7 +54,7 @@ fun ChangePasswordSettingsScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(onBack)
+        TopBar { navController.popBackStack() }
 
         TitleText("Cambiar Contraseña")
 
@@ -118,7 +116,7 @@ fun ChangePasswordSettingsScreen(
         Button(
             onClick = {
                 showSuccess = true
-                onPasswordChanged()
+                // Aquí puedes llamar a tu ViewModel o lógica de cambio de contraseña
             },
             enabled = isFormValid && !isLoading,
             modifier = Modifier
@@ -201,29 +199,27 @@ fun PasswordSettingsFormField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = Color(0xFF999999)) },
+            placeholder = { Text(placeholder) },
             singleLine = true,
             isError = isError,
             visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
                 IconButton(onClick = onTogglePassword) {
                     Icon(
                         imageVector = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (showPassword) "Ocultar contraseña" else "Mostrar contraseña"
+                        contentDescription = if (showPassword) "Ocultar" else "Mostrar"
                     )
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
         )
         if (isError && errorText != null) {
             Text(
                 text = errorText,
                 color = Color.Red,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(top = 2.dp)
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
             )
         }
     }
@@ -231,11 +227,7 @@ fun PasswordSettingsFormField(
 
 @Preview(showBackground = true)
 @Composable
-fun ChangePasswordSettingsScreenPreview() {
-    ChangePasswordSettingsScreen(
-        onBack = {},
-        onPasswordChanged = {},
-        isLoading = false,
-        errorMessage = null
-    )
+fun PreviewConfig_05_CambiarContrasena() {
+    val navController = rememberNavController()
+    Config_05_CambiarContrasena(navController = navController)
 }

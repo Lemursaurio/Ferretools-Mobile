@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,11 +30,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.ui.components.ConfirmationNavBar
 
 @Composable
-fun PedidoExitosoScreen(navController: NavController) {
+fun P_04_PedidoExitoso(
+    navController: NavController,
+    // viewModel: PedidoExitosoViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         bottomBar = { ConfirmationNavBar(navController) }
     ) { padding ->
-
         Box(
             modifier = Modifier
                 .padding(padding)
@@ -49,12 +52,33 @@ fun PedidoExitosoScreen(navController: NavController) {
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(32.dp)
                 ) {
-                    Text("PEDIDO", style = MaterialTheme.typography.titleMedium)
-                    Text("EXITOSO", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "PEDIDO",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black
+                    )
+                    Text(
+                        "EXITOSO",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
-                    Icon(Icons.Default.ThumbUp, contentDescription = "Éxito", modifier = Modifier.size(32.dp))
+                    Icon(
+                        Icons.Default.ThumbUp,
+                        contentDescription = "Éxito",
+                        modifier = Modifier.size(48.dp),
+                        tint = Color.Black
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        "Tu pedido ha sido registrado correctamente. Recibirás una notificación cuando esté listo.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        color = Color.Black
+                    )
                 }
             }
         }
@@ -63,7 +87,7 @@ fun PedidoExitosoScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewPedidoExitosoScreen() {
+fun PreviewP_04_PedidoExitoso() {
     val navController = rememberNavController()
-    PedidoExitosoScreen(navController = navController)
+    P_04_PedidoExitoso(navController = navController)
 }

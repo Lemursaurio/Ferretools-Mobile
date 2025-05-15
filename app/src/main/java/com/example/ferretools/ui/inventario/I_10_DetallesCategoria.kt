@@ -17,11 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ProductosCategoriaScreen(
+fun I_10_DetallesCategoria(
     navController: NavController,
     categoria: String = "Nombre de la categoria"
+    // viewModel: DetallesCategoriaViewModel = viewModel() // Para uso futuro
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val productosMock = listOf(
@@ -124,4 +127,11 @@ fun ProductosCategoriaScreen(
             }
         }
     }
-} 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun I_10_DetallesCategoriaPreview() {
+    val navController = rememberNavController()
+    I_10_DetallesCategoria(navController = navController)
+}

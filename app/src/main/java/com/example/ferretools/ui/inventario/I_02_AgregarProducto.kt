@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,10 +20,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
-fun AgregarProductoScreen(
+fun I_02_AgregarProducto(
     navController: NavController,
     viewModel: ProductoViewModel = viewModel()
 ) {
@@ -43,7 +47,7 @@ fun AgregarProductoScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Default.List, contentDescription = "Atrás", tint = Color.Black)
+                Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = Color.Black)
             }
             Text(
                 text = "Agregar Producto",
@@ -175,9 +179,9 @@ fun AgregarProductoScreen(
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { 
+                onClick = {
                     viewModel.agregarProducto()
-                    showDialog.value = true 
+                    showDialog.value = true
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -197,15 +201,21 @@ fun AgregarProductoScreen(
                 confirmButton = {
                     Button(
                         onClick = {
-                            showDialog.value = false 
-                            viewModel.limpiarFormulario()
-                            navController.popBackStack()
+                            showDialog.value = false
+                            navController.navigate(AppRoutes.Inventory.PRODUCT_ADDED)
                         }
                     ) {
-                        Text("Aceptar")
+                        Text("OK")
                     }
                 }
             )
         }
     }
-} 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun I_02_AgregarProductoPreview() {
+    val navController = rememberNavController()
+    I_02_AgregarProducto(navController = navController)
+}

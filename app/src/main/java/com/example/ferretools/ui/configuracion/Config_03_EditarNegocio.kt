@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,19 +22,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EditBusinessScreen(
+fun Config_03_EditarNegocio(
+    navController: NavController,
     initialBusinessName: String,
     initialBusinessType: String,
     initialAddress: String,
     initialRuc: String,
     initialLogo: String? = null,
-    onBack: () -> Unit,
-    onSave: (String, String, String, String, String?) -> Unit,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: EditarNegocioViewModel = viewModel() // Para uso futuro
 ) {
     var businessName by rememberSaveable { mutableStateOf(initialBusinessName) }
     var businessType by rememberSaveable { mutableStateOf(initialBusinessType) }
@@ -54,9 +54,26 @@ fun EditBusinessScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(onBack)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color(0xFF333333))
+            }
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
-        SectionTitle("Editar Datos del Negocio")
+        Text(
+            text = "Editar Datos del Negocio",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        )
 
         LogoSelector(logo) {
             // TODO: lógica para seleccionar una imagen
@@ -82,7 +99,9 @@ fun EditBusinessScreen(
         Button(
             onClick = {
                 showSuccess = true
-                onSave(businessName, businessType, address, ruc, logo)
+                // Aquí puedes llamar a tu ViewModel o lógica de guardado
+                // viewModel.saveBusiness(businessName, businessType, address, ruc, logo)
+                navController.popBackStack() // O navega a donde corresponda tras guardar
             },
             enabled = isFormValid && !isLoading,
             modifier = Modifier
@@ -98,33 +117,6 @@ fun EditBusinessScreen(
             Text("GUARDAR", fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
     }
-}
-
-@Composable
-private fun TopBar(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color(0xFF333333))
-        }
-        Spacer(modifier = Modifier.weight(1f))
-    }
-}
-
-@Composable
-fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color(0xFF333333),
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    )
 }
 
 @Composable
@@ -198,13 +190,13 @@ fun SuccessText(text: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun EditBusinessScreenPreview() {
-    EditBusinessScreen(
+fun Config_03_EditarNegocioPreview() {
+    val navController = rememberNavController()
+    Config_03_EditarNegocio(
+        navController = navController,
         initialBusinessName = "Ferretería Central",
         initialBusinessType = "Ferretería",
         initialAddress = "Av. Principal 123",
-        initialRuc = "12345678901",
-        onBack = {},
-        onSave = { _, _, _, _, _ -> }
+        initialRuc = "12345678901"
     )
 }

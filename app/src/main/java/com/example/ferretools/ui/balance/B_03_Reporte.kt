@@ -3,22 +3,10 @@ package com.example.ferretools.ui.balance
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,12 +22,41 @@ import com.example.ferretools.ui.components.SelectorOpciones
 import com.example.ferretools.ui.components.TopNavBar
 import com.example.ferretools.ui.components.reporte.ResumenBox
 
+private val YellowPrimary = Color(0xFFFFEB3B)
+private val CardBorder = Color.Black
+
+data class ResumenReporte(
+    val productosDiferentes: Int,
+    val categoriasDiferentes: Int,
+    val productosTotales: Int,
+    val gananciasTotales: Double,
+    val productosDiferentesPorcentaje: String,
+    val categoriasDiferentesPorcentaje: String,
+    val productosTotalesPorcentaje: String,
+    val gananciasTotalesPorcentaje: String
+)
+
 @Composable
-fun ReporteVentasComprasScreen(navController: NavController) {
+fun B_03_Reporte(
+    navController: NavController,
+    // viewModel: ReporteViewModel = viewModel() // Para uso futuro
+) {
+    // Datos de ejemplo
+    val resumen = ResumenReporte(
+        productosDiferentes = 25,
+        categoriasDiferentes = 8,
+        productosTotales = 120,
+        gananciasTotales = 3500.0,
+        productosDiferentesPorcentaje = "+15%",
+        categoriasDiferentesPorcentaje = "+10%",
+        productosTotalesPorcentaje = "+20%",
+        gananciasTotalesPorcentaje = "+18%"
+    )
+    var seleccionado by remember { mutableStateOf("Compras") }
+
     Scaffold(
         topBar = { TopNavBar(navController, "Reporte de Ventas y Compras") }
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -52,17 +69,17 @@ fun ReporteVentasComprasScreen(navController: NavController) {
             SelectorOpciones(
                 opcion1 = "Compras",
                 opcion2 = "Ventas",
-                seleccionado = ""
-            ) { /* TODO: Función de selección de valor */ }
+                seleccionado = seleccionado
+            ) { seleccionado = it }
 
-            Spacer(Modifier.padding(vertical = 8.dp))
+            Spacer(Modifier.height(8.dp))
 
             // Box del gráfico
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .height(240.dp) // Aumenta la altura si es necesario
-                    .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+                    .height(240.dp)
+                    .border(2.dp, CardBorder, RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
                 Column(
@@ -73,12 +90,14 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Estadísticas de Venta", fontWeight = FontWeight.Bold)
-                        // Selector de periodo
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Monthly", fontSize = 13.sp)
+                        Text(
+                            "Estadísticas de ${seleccionado}",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        // Selector de periodo (puedes hacerlo interactivo si lo deseas)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Mensual", fontSize = 13.sp)
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -89,7 +108,6 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                             .weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Imagen de gráfico como placeholder
                         Image(
                             painter = painterResource(R.drawable.grafico),
                             contentDescription = "Gráfico",
@@ -100,11 +118,11 @@ fun ReporteVentasComprasScreen(navController: NavController) {
 
                     // Botón PDF
                     Button(
-                        onClick = { /* Acción PDF */ },
+                        onClick = { /* TODO: Exportar a PDF */ },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(44.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEB3B))
+                        colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary)
                     ) {
                         Text("Convertir a PDF", color = Color.Black)
                     }
@@ -124,13 +142,13 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                 ) {
                     ResumenBox(
                         titulo = "Productos\ndiferentes",
-                        valor = "XXXX",
-                        porcentaje = "+15%"
+                        valor = resumen.productosDiferentes.toString(),
+                        porcentaje = resumen.productosDiferentesPorcentaje
                     )
                     ResumenBox(
                         titulo = "Categorías\ndiferentes",
-                        valor = "XXXX",
-                        porcentaje = "+15%"
+                        valor = resumen.categoriasDiferentes.toString(),
+                        porcentaje = resumen.categoriasDiferentesPorcentaje
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -140,13 +158,13 @@ fun ReporteVentasComprasScreen(navController: NavController) {
                 ) {
                     ResumenBox(
                         titulo = "Productos\ntotales",
-                        valor = "XXXX",
-                        porcentaje = "+15%"
+                        valor = resumen.productosTotales.toString(),
+                        porcentaje = resumen.productosTotalesPorcentaje
                     )
                     ResumenBox(
                         titulo = "Ganancias\ntotales",
-                        valor = "XXXX",
-                        porcentaje = "+15%"
+                        valor = "S/ ${resumen.gananciasTotales}",
+                        porcentaje = resumen.gananciasTotalesPorcentaje
                     )
                 }
             }
@@ -156,7 +174,7 @@ fun ReporteVentasComprasScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewReporteVentasComprasScreen() {
+fun PreviewB_03_Reporte() {
     val navController = rememberNavController()
-    ReporteVentasComprasScreen(navController = navController)
+    B_03_Reporte(navController = navController)
 }

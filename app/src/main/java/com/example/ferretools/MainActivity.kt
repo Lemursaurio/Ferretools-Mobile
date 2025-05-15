@@ -10,7 +10,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+
 import com.example.ferretools.navigation.NavGraph
+import com.example.ferretools.navigation.MainAppNavigation
+import com.example.ferretools.navigation.AppNavigation
+
 import com.example.ferretools.theme.FerretoolsTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +36,9 @@ fun MainScreen() {
             color = MaterialTheme.colorScheme.background
         ) {
             val navController = rememberNavController()
-            NavGraph(navController = navController)
+            //NavGraph(navController = navController)
+            //MainAppNavigation(navController = navController)
+            AppNavigation(navController = navController)
         }
     }
 }

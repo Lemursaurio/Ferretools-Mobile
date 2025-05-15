@@ -2,15 +2,7 @@ package com.example.ferretools.ui.venta
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
@@ -30,7 +22,10 @@ import com.example.ferretools.ui.components.boleta.BoletaNavBar
 import com.example.ferretools.ui.components.boleta.DetalleProductoFila
 
 @Composable
-fun BoletaVentaScreen(navController: NavController) {
+fun V_05_BoletaVenta(
+    navController: NavController,
+    // viewModel: BoletaVentaViewModel = viewModel() // Para uso futuro
+) {
     Scaffold(
         topBar = { TopNavBar(navController, "Boleta de venta") }
     ) { padding ->
@@ -101,14 +96,14 @@ fun BoletaVentaScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             // Acciones
-            BoletaNavBar()
+            BoletaNavBar(navController)
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBoletaVentaScreen() {
+fun V_05_BoletaVentaPreview() {
     val navController = rememberNavController()
-    BoletaVentaScreen(navController = navController)
+    V_05_BoletaVenta(navController = navController)
 }

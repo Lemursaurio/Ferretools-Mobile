@@ -7,38 +7,36 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EditProfileScreen(
+fun Config_02_EditarPerfil(
+    navController: NavController,
     initialName: String,
     initialLastName: String,
     initialPhone: String,
     initialEmail: String,
     initialProfileImage: String? = null,
-    onBack: () -> Unit,
-    onSave: (name: String, lastName: String, phone: String, email: String, profileImage: String?) -> Unit,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    // viewModel: EditarPerfilViewModel = viewModel() // Para uso futuro
 ) {
     var name by remember { mutableStateOf(initialName) }
     var lastName by remember { mutableStateOf(initialLastName) }
@@ -58,7 +56,19 @@ fun EditProfileScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(onBack)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = Color(0xFF333333)
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Text(
             text = "Editar Perfil",
@@ -116,30 +126,26 @@ fun EditProfileScreen(
             )
         }
 
-        SaveButton(
+        Button(
             enabled = isFormValid && !isLoading,
             onClick = {
                 showSuccess = true
-                onSave(name, lastName, phone, email, profileImage)
-            }
-        )
-    }
-}
-
-@Composable
-private fun Header(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBack) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Volver",
-                tint = Color(0xFF333333)
-            )
+                // Aquí puedes llamar a tu ViewModel o lógica de guardado
+                // viewModel.saveProfile(name, lastName, phone, email, profileImage)
+                navController.popBackStack() // O navega a donde corresponda tras guardar
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2E7D32),
+                contentColor = Color.White
+            ),
+            elevation = ButtonDefaults.buttonElevation(4.dp)
+        ) {
+            Text("GUARDAR", fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -201,38 +207,15 @@ fun EditProfileFormField(
     }
 }
 
-@Composable
-private fun SaveButton(enabled: Boolean, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF2E7D32),
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(12.dp),
-        elevation = ButtonDefaults.buttonElevation(2.dp)
-    ) {
-        Text(
-            text = "GUARDAR",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun EditProfileScreenPreview() {
-    EditProfileScreen(
+fun Config_02_EditarPerfilPreview() {
+    val navController = rememberNavController()
+    Config_02_EditarPerfil(
+        navController = navController,
         initialName = "Juan",
         initialLastName = "Pérez",
-        initialPhone = "+51 999 888 777",
-        initialEmail = "juan.perez@email.com",
-        onBack = {},
-        onSave = { _, _, _, _, _ -> }
+        initialPhone = "987654321",
+        initialEmail = "juan.perez@email.com"
     )
 }

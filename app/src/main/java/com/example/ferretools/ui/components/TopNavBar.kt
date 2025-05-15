@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,20 +21,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun TopNavBar(navController: NavController, text: String, modifier: Modifier = Modifier) {
+fun TopNavBar(
+    navController: NavController,
+    text: String,
+    modifier: Modifier = Modifier,
+    onBack: (() -> Unit)? = null // Permite callback personalizado
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Color(0xFF00BF59))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Atrás",
-            tint = Color.Black,
-            modifier = Modifier.size(26.dp)
-        )
+        IconButton(
+            onClick = { onBack?.invoke() ?: navController.popBackStack() }
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Atrás",
+                tint = Color.Black,
+                modifier = Modifier.size(26.dp)
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
