@@ -178,8 +178,8 @@ fun S_06_RecuperarContrasena(
                 enabled = isCodeValid && !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(top = 24.dp),
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF4CAF50),
                     contentColor = Color.White
@@ -190,7 +190,8 @@ fun S_06_RecuperarContrasena(
                 Text(
                     text = "CONTINUAR",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         }

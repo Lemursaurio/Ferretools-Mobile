@@ -1,18 +1,57 @@
 package com.example.ferretools.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.ui.session.*
-import com.example.ferretools.ui.configuracion.*
-import com.example.ferretools.ui.home.*
-import com.example.ferretools.ui.inventario.*
-import com.example.ferretools.ui.compra.*
-import com.example.ferretools.ui.venta.*
-import com.example.ferretools.ui.pedido.*
-import com.example.ferretools.ui.balance.*
+import com.example.ferretools.ui.balance.B_01_Balances
+import com.example.ferretools.ui.balance.B_02_Detalles
+import com.example.ferretools.ui.balance.B_03_Reporte
+import com.example.ferretools.ui.compra.C_01_CarritoCompra
+import com.example.ferretools.ui.compra.C_02_ResumenCarritoCompra
+import com.example.ferretools.ui.compra.C_04_CompraExitosa
+import com.example.ferretools.ui.compra.C_05_BoletaCompra
+import com.example.ferretools.ui.configuracion.Config_01_Configuracion
+import com.example.ferretools.ui.configuracion.Config_02_EditarPerfil
+import com.example.ferretools.ui.configuracion.Config_03_EditarNegocio
+import com.example.ferretools.ui.configuracion.Config_04_CambiarQRYape
+import com.example.ferretools.ui.configuracion.Config_05_CambiarContrasena
+import com.example.ferretools.ui.home.HOME_Admin
+import com.example.ferretools.ui.home.HOME_Cliente
+import com.example.ferretools.ui.home.HOME_Empleado
+import com.example.ferretools.ui.home.PedidoCliente
+import com.example.ferretools.ui.inventario.I_01_ListaProductos
+import com.example.ferretools.ui.inventario.I_02_AgregarProducto
+import com.example.ferretools.ui.inventario.I_04_DetallesProducto
+import com.example.ferretools.ui.inventario.I_05_ReporteProducto
+import com.example.ferretools.ui.inventario.I_08_ListaCategorias
+import com.example.ferretools.ui.inventario.I_09_CrearCategoria
+import com.example.ferretools.ui.inventario.I_10_DetallesCategoria
+import com.example.ferretools.ui.inventario.I_12_ReporteInventario
+import com.example.ferretools.ui.inventario.ProductoViewModel
+import com.example.ferretools.ui.pedido.P_01_AgregarAlCarrito
+import com.example.ferretools.ui.pedido.P_02_CarritoCliente
+import com.example.ferretools.ui.pedido.P_03_ConfirmarPedido
+import com.example.ferretools.ui.pedido.P_04_PedidoExitoso
+import com.example.ferretools.ui.pedido.P_05_HistorialPedidos
+import com.example.ferretools.ui.pedido.P_06_BoletaPedido
+import com.example.ferretools.ui.pedido.P_E1_HistorialPedidos
+import com.example.ferretools.ui.pedido.P_E2_DetallesPedido
+import com.example.ferretools.ui.pedido.P_E3_PrepararPedido
+import com.example.ferretools.ui.pedido.PedidoDetalle
+import com.example.ferretools.ui.pedido.PedidoHistorial
+import com.example.ferretools.ui.session.S_01_PortadaBienvenida
+import com.example.ferretools.ui.session.S_02_SeleccionRol
+import com.example.ferretools.ui.session.S_03_RegistroUsuario
+import com.example.ferretools.ui.session.S_04_RegistroNegocio
+import com.example.ferretools.ui.session.S_05_IniciarSesion
+import com.example.ferretools.ui.session.S_06_RecuperarContrasena
+import com.example.ferretools.ui.session.S_07_CambiarContrasena
+import com.example.ferretools.ui.venta.V_01_CarritoVenta
+import com.example.ferretools.ui.venta.V_02_ResumenCarritoVenta
+import com.example.ferretools.ui.venta.V_04_VentaExitosa
+import com.example.ferretools.ui.venta.V_05_BoletaVenta
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
@@ -119,7 +158,15 @@ fun AppNavigation(navController: NavHostController) {
             I_01_ListaProductos(navController = navController)
         }
         composable(AppRoutes.Inventory.ADD_PRODUCT) {
-            I_02_AgregarProducto(navController = navController)
+            val viewModel: ProductoViewModel = viewModel()
+            I_02_AgregarProducto(
+                navController = navController,
+                viewModel = viewModel
+            )
+//            I_02_AgregarProducto(navController = navController)
+        }
+        composable(AppRoutes.Inventory.PRODUCT_DETAILS) {
+            I_04_DetallesProducto(navController = navController)
         }
         composable(AppRoutes.Inventory.PRODUCT_REPORT) {
             I_05_ReporteProducto(navController = navController)

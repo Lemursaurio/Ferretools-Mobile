@@ -54,10 +54,11 @@ fun BoletaNavBar(
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable {
-                onShareClick?.invoke()
-                    ?: navController.navigate(AppRoutes.Inventory.SHARE_REPORT)
-            }
+            modifier = Modifier.clickable { onShareClick?.invoke() }
+//            modifier = Modifier.clickable {
+//                onShareClick?.invoke()
+//                    ?: navController.navigate(AppRoutes.Inventory.SHARE_REPORT)
+//            }
         ) {
             Image(
                 painterResource(R.drawable.share),

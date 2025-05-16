@@ -1,5 +1,6 @@
 package com.example.ferretools.navigation
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -40,7 +41,11 @@ fun NavGraphBuilder.adminNavGraph(navController: NavHostController) {
             I_01_ListaProductos(navController = navController)
         }
         composable(AppRoutes.Inventory.ADD_PRODUCT) {
-            I_02_AgregarProducto(navController = navController)
+            val viewModel: ProductoViewModel = viewModel()
+            I_02_AgregarProducto(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
         composable(AppRoutes.Inventory.PRODUCT_DETAILS) {
             I_05_ReporteProducto(navController = navController)
