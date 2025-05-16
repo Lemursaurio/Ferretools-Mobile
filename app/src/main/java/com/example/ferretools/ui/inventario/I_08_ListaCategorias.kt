@@ -101,7 +101,8 @@ fun I_08_ListaCategorias(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .clickable { navController.navigate("${AppRoutes.Inventory.LIST_PRODUCTS}/${categoria}") },
+                        .clickable { navController.navigate(AppRoutes.Inventory.CATEGORY_DETAILS) },
+//                        .clickable { navController.navigate("${AppRoutes.Inventory.LIST_PRODUCTS}/${categoria}") },
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                     shape = RoundedCornerShape(8.dp)
                 ) {

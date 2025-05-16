@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -28,7 +29,7 @@ import com.example.ferretools.navigation.AppRoutes
 @Composable
 fun I_02_AgregarProducto(
     navController: NavController,
-    viewModel: ProductoViewModel = viewModel()
+    viewModel: ProductoViewModel
 ) {
     val scrollState = rememberScrollState()
     val showDialog = remember { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun I_02_AgregarProducto(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Default.List, contentDescription = "Cargar Imagen", tint = Color.Black)
-                    Text("Cargar Imagen", color = Color.Black, fontSize = 14.sp)
+                    Text("Cargar Imagen", color = Color.Black, fontSize = 14.sp, textAlign = TextAlign.Center)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -202,7 +203,8 @@ fun I_02_AgregarProducto(
                     Button(
                         onClick = {
                             showDialog.value = false
-                            navController.navigate(AppRoutes.Inventory.PRODUCT_ADDED)
+                            navController.popBackStack()
+//                            navController.navigate(AppRoutes.Inventory.LIST_PRODUCTS)
                         }
                     ) {
                         Text("OK")
@@ -217,5 +219,9 @@ fun I_02_AgregarProducto(
 @Composable
 fun I_02_AgregarProductoPreview() {
     val navController = rememberNavController()
-    I_02_AgregarProducto(navController = navController)
+    val viewModel: ProductoViewModel = viewModel()
+    I_02_AgregarProducto(
+        navController = navController,
+        viewModel = viewModel
+    )
 }

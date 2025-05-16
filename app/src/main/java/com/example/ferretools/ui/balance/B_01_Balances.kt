@@ -138,7 +138,9 @@ fun B_01_Balances(
             Button(
                 onClick = { navController.navigate(AppRoutes.Balance.REPORT) },
                 colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary),
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(end = 15.dp)
             ) {
                 Text("Reporte", color = Color.Black)
             }

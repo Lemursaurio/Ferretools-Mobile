@@ -1,18 +1,24 @@
 package com.example.ferretools.navigation
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.NavHostController
-
-import kotlin.collections.listOf
-
+import com.example.ferretools.ui.compra.C_01_CarritoCompra
+import com.example.ferretools.ui.compra.C_02_ResumenCarritoCompra
+import com.example.ferretools.ui.compra.C_04_CompraExitosa
+import com.example.ferretools.ui.compra.C_05_BoletaCompra
 import com.example.ferretools.ui.home.HOME_Empleado
 import com.example.ferretools.ui.home.PedidoPendiente
-import com.example.ferretools.ui.pedido.*
-import com.example.ferretools.ui.inventario.*
-import com.example.ferretools.ui.compra.*
-import com.example.ferretools.ui.venta.*
+import com.example.ferretools.ui.inventario.I_01_ListaProductos
+import com.example.ferretools.ui.inventario.I_05_ReporteProducto
+import com.example.ferretools.ui.inventario.I_08_ListaCategorias
+import com.example.ferretools.ui.inventario.I_09_CrearCategoria
+import com.example.ferretools.ui.inventario.I_10_DetallesCategoria
+import com.example.ferretools.ui.venta.V_01_CarritoVenta
+import com.example.ferretools.ui.venta.V_02_ResumenCarritoVenta
+import com.example.ferretools.ui.venta.V_04_VentaExitosa
+import com.example.ferretools.ui.venta.V_05_BoletaVenta
 
 fun NavGraphBuilder.almaceneroNavGraph(navController: NavHostController) {
     navigation(
@@ -37,7 +43,7 @@ fun NavGraphBuilder.almaceneroNavGraph(navController: NavHostController) {
 
         // Inventario
         composable("I_01_ListaProductos") { I_01_ListaProductos(navController) }
-        composable("I_02_AgregarProducto") { I_02_AgregarProducto(navController) }
+//        composable("I_02_AgregarProducto") { I_02_AgregarProducto(navController) }
         //composable("I_03_ProductoAgregado") { I_03_ProductoAgregado(navController) }
         // falta composable("I_04_DetallesProducto") { I_04_DetallesProducto(navController) }
         composable("I_05_ReporteProducto") { I_05_ReporteProducto(navController) }

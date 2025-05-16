@@ -14,17 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.ferretools.navigation.AppRoutes
 
 @Composable
 fun I_10_DetallesCategoria(
     navController: NavController,
     categoria: String = "Nombre de la categoria"
-    // viewModel: DetallesCategoriaViewModel = viewModel() // Para uso futuro
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val productosMock = listOf(
@@ -104,12 +104,18 @@ fun I_10_DetallesCategoria(
                 .padding(16.dp)
         ) {
             productosMock.forEach { producto ->
-                Card(
-                    Modifier
+                Button(
+                    onClick = {
+                        // Datos mock para ejemplo
+                        navController.navigate(
+                            AppRoutes.Inventory.PRODUCT_DETAILS
+                        )
+                    },
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                 ) {
                     Row(
                         Modifier.padding(16.dp),
@@ -121,7 +127,7 @@ fun I_10_DetallesCategoria(
                             tint = Color.Black
                         )
                         Spacer(Modifier.width(16.dp))
-                        Text(producto, fontWeight = FontWeight.Bold)
+                        Text(producto, fontWeight = FontWeight.Bold, color = Color.Black)
                     }
                 }
             }
@@ -131,7 +137,7 @@ fun I_10_DetallesCategoria(
 
 @Preview(showBackground = true)
 @Composable
-fun I_10_DetallesCategoriaPreview() {
+fun PreviewProductosCategoriaScreen() {
     val navController = rememberNavController()
     I_10_DetallesCategoria(navController = navController)
 }

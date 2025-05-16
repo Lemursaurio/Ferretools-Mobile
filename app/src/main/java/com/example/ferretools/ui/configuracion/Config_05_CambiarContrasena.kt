@@ -116,6 +116,7 @@ fun Config_05_CambiarContrasena(
         Button(
             onClick = {
                 showSuccess = true
+                navController.popBackStack()
                 // Aquí puedes llamar a tu ViewModel o lógica de cambio de contraseña
             },
             enabled = isFormValid && !isLoading,

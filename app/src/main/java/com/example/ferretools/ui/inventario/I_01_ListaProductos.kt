@@ -28,7 +28,7 @@ import com.example.ferretools.navigation.AppRoutes
 @Composable
 fun I_01_ListaProductos(
     navController: NavController,
-    viewModel: InventarioViewModel = viewModel()
+//    viewModel: InventarioViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -86,7 +86,8 @@ fun I_01_ListaProductos(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.SpaceAround
+//                    .spacedBy(12.dp)
             ) {
                 SummaryCard(title = "Total de Productos", value = "0")
                 SummaryCard(title = "Total de Productos", value = "0 PEN")
@@ -150,7 +151,10 @@ fun I_01_ListaProductos(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp),
+                .padding(
+                    horizontal = 32.dp,
+                    vertical= 20.dp
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
