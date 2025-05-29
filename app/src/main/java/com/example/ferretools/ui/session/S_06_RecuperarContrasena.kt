@@ -2,25 +2,42 @@ package com.example.ferretools.ui.session
 
 import android.util.Patterns
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.theme.FerretoolsTheme
 
 @Composable
 fun S_06_RecuperarContrasena(
@@ -38,7 +55,7 @@ fun S_06_RecuperarContrasena(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
         // Botón de retroceso
@@ -48,9 +65,9 @@ fun S_06_RecuperarContrasena(
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Volver",
-                    tint = Color(0xFF333333)
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -58,9 +75,8 @@ fun S_06_RecuperarContrasena(
         }
         Text(
             text = "Recuperar contraseña",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
@@ -69,8 +85,8 @@ fun S_06_RecuperarContrasena(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Se le mandará un código de confirmación.",
-            color = Color(0xFF666666),
-            fontSize = 15.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
@@ -82,16 +98,14 @@ fun S_06_RecuperarContrasena(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "•",
-                    color = Color(0xFF444444),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = "Ingrese su correo",
-                    color = Color(0xFF444444),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
             OutlinedTextField(
@@ -108,8 +122,8 @@ fun S_06_RecuperarContrasena(
             if (email.isNotBlank() && !isEmailValid) {
                 Text(
                     text = "Correo inválido",
-                    color = Color.Red,
-                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onError,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -126,16 +140,15 @@ fun S_06_RecuperarContrasena(
             ) {
                 Text(
                     text = "ENVIAR CÓDIGO",
-                    color = Color(0xFF2E7D32),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displayMedium
                 )
             }
         }
 
         if (codeSent) {
-            Divider(
-                color = Color(0xFFF5F5F5),
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant,
                 thickness = 1.dp,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -144,16 +157,14 @@ fun S_06_RecuperarContrasena(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "•",
-                    color = Color(0xFF444444),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = "Escriba el código",
-                    color = Color(0xFF444444),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
             OutlinedTextField(
@@ -181,16 +192,15 @@ fun S_06_RecuperarContrasena(
                     .height(56.dp)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4CAF50),
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                shape = RoundedCornerShape(12.dp),
+                shape = MaterialTheme.shapes.small,
                 elevation = ButtonDefaults.buttonElevation(4.dp)
             ) {
                 Text(
                     text = "CONTINUAR",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
@@ -199,8 +209,8 @@ fun S_06_RecuperarContrasena(
         if (errorMessage != null) {
             Text(
                 text = errorMessage,
-                color = Color.Red,
-                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onError,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -210,6 +220,9 @@ fun S_06_RecuperarContrasena(
 @Preview(showBackground = true)
 @Composable
 fun S_06_RecuperarContrasenaPreview() {
-    val navController = rememberNavController()
-    S_06_RecuperarContrasena(navController = navController)
+    FerretoolsTheme {
+        val navController = rememberNavController()
+        S_06_RecuperarContrasena(navController = navController)
+    }
+
 }

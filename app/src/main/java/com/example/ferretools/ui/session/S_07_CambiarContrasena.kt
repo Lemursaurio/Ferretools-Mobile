@@ -1,29 +1,41 @@
 package com.example.ferretools.ui.session
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.theme.FerretoolsTheme
 
 @Composable
 fun S_07_CambiarContrasena(
@@ -45,7 +57,7 @@ fun S_07_CambiarContrasena(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -53,9 +65,8 @@ fun S_07_CambiarContrasena(
 
         Text(
             text = "Cambiar Contraseña",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 32.dp),
@@ -88,15 +99,15 @@ fun S_07_CambiarContrasena(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Divider(color = Color(0xFFF0F0F0), thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 
         Spacer(modifier = Modifier.height(24.dp))
 
         errorMessage?.let {
             Text(
                 text = it,
-                color = Color.Red,
-                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onError,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -104,9 +115,8 @@ fun S_07_CambiarContrasena(
         if (showSuccess) {
             Text(
                 text = "¡Contraseña cambiada exitosamente!",
-                color = Color(0xFF2E7D32),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
@@ -124,16 +134,15 @@ fun S_07_CambiarContrasena(
                 .fillMaxWidth()
                 .height(52.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF4CAF50),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
-            shape = RoundedCornerShape(12.dp),
+            shape = MaterialTheme.shapes.small,
             elevation = ButtonDefaults.buttonElevation(2.dp)
         ) {
             Text(
                 text = "CONTINUAR",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                style = MaterialTheme.typography.labelSmall
             )
         }
     }
@@ -153,15 +162,14 @@ fun PasswordFormField(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333),
-            fontSize = 16.sp,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = Color(0xFF999999)) },
+            placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             singleLine = true,
             isError = isError,
             visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
@@ -179,8 +187,8 @@ fun PasswordFormField(
         if (isError && errorText != null) {
             Text(
                 text = errorText,
-                color = Color.Red,
-                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onError,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 2.dp)
             )
         }
@@ -190,6 +198,9 @@ fun PasswordFormField(
 @Preview(showBackground = true)
 @Composable
 fun S_07_CambiarContrasenaPreview() {
-    val navController = rememberNavController()
-    S_07_CambiarContrasena(navController = navController)
+    FerretoolsTheme {
+        val navController = rememberNavController()
+        S_07_CambiarContrasena(navController = navController)
+    }
+
 }
