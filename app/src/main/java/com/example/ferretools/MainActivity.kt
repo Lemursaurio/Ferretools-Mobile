@@ -25,6 +25,8 @@ class MainActivity : ComponentActivity() {
 
         probarFirebase()
 
+//        probarCrashlytics()
+
         enableEdgeToEdge()
         setContent {
             MainScreen()
@@ -76,6 +78,10 @@ fun probarFirebase() {
             Log.e("FIREBASE", "Error: ${it.message}")
         }
 
+}
+
+fun probarCrashlytics() {
+    throw RuntimeException("Testeo de Crashlytics")
 }
 
 @Composable

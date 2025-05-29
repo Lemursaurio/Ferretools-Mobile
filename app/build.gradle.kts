@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Plugin de Gradle de Google Services
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -67,8 +68,12 @@ dependencies {
     implementation ("androidx.compose.material:material:1.6.0")
 
     // BoM de Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
 
     // Firestore
     implementation("com.google.firebase:firebase-firestore")
+
+    // Crashlytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 }
