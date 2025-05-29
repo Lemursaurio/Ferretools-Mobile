@@ -2,43 +2,43 @@ package com.example.ferretools.ui.session
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
-import com.example.ferretools.theme.FerretoolsTheme
 import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.theme.FerretoolsTheme
 
 @Composable
 fun S_01_PortadaBienvenida(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    // Colores definidos como constantes
-    val green = Color(0xFF2E7D32)
-    val darkGreen = Color(0xFF1B5E20)
-    val white = Color.White
-    val cornerRadius = 24.dp
-
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
     ) {
         // Imagen de fondo
         Image(
@@ -56,9 +56,9 @@ fun S_01_PortadaBienvenida(
                 .align(Alignment.Center)
                 .width(320.dp)
                 .height(360.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .background(green)
-                .shadow(8.dp, RoundedCornerShape(32.dp))
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .shadow(8.dp, MaterialTheme.shapes.medium)
         ) {
             Column(
                 modifier = Modifier
@@ -69,9 +69,8 @@ fun S_01_PortadaBienvenida(
             ) {
                 Text(
                     text = "Gestiona tu Ferretería",
-                    color = white,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.displayLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -90,16 +89,15 @@ fun S_01_PortadaBienvenida(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = white,
-                        contentColor = green
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = MaterialTheme.shapes.small,
                     elevation = ButtonDefaults.buttonElevation(4.dp)
                 ) {
                     Text(
                         text = "CREAR CUENTA",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
 
@@ -116,16 +114,15 @@ fun S_01_PortadaBienvenida(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = darkGreen,
-                        contentColor = white
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
                     ),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = MaterialTheme.shapes.small,
                     elevation = ButtonDefaults.buttonElevation(4.dp)
                 ) {
                     Text(
                         text = "INICIAR SESIÓN",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
             }
@@ -133,7 +130,7 @@ fun S_01_PortadaBienvenida(
     }
 }
 
-// Preview para
+// Preview
 
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable

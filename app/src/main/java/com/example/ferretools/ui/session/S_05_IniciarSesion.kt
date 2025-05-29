@@ -3,36 +3,45 @@ package com.example.ferretools.ui.session
 import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.theme.FerretoolsTheme
 
-private val PrimaryColor = Color(0xFF2E7D32)
-private val TextColor = Color(0xFF1B5E20)
-private val HintColor = Color(0xFFBDBDBD)
-private val LinkColor = Color(0xFF1976D2)
-private val GrayText = Color(0xFF757575)
-private val DividerColor = Color(0xFFBDBDBD).copy(alpha = 0.5f)
 
 @Composable
 fun S_05_IniciarSesion(
@@ -52,7 +61,7 @@ fun S_05_IniciarSesion(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,9 +69,8 @@ fun S_05_IniciarSesion(
 
         Text(
             text = "Iniciar Sesión",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextColor,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
@@ -95,16 +103,16 @@ fun S_05_IniciarSesion(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-        Divider(color = DividerColor, thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         ForgotPasswordLink(onClick = { navController.navigate(AppRoutes.Auth.RECOVER_PASSWORD) })
-        Divider(color = DividerColor, thickness = 1.dp)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Spacer(modifier = Modifier.height(24.dp))
 
         errorMessage?.let {
             Text(
                 text = it,
-                color = Color.Red,
-                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onError,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -137,15 +145,14 @@ fun LoginFormField(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
-            fontWeight = FontWeight.Bold,
-            color = TextColor,
-            fontSize = 15.sp,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeholder, color = HintColor) },
+            placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             singleLine = true,
             isError = isError,
             visualTransformation = if (isPassword && !showPassword) PasswordVisualTransformation() else VisualTransformation.None,
@@ -160,13 +167,12 @@ fun LoginFormField(
             } else null,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent)
         )
         if (isError && errorText != null) {
             Text(
                 text = errorText,
-                color = Color.Red,
-                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onError,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 2.dp)
             )
         }
@@ -177,9 +183,8 @@ fun LoginFormField(
 fun ForgotPasswordLink(onClick: () -> Unit) {
     Text(
         text = "¿Olvidaste tu contraseña?",
-        color = LinkColor,
-        fontSize = 15.sp,
-        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.tertiary,
+        style = MaterialTheme.typography.bodyLarge,
         textAlign = TextAlign.End,
         modifier = Modifier
             .fillMaxWidth()
@@ -198,16 +203,15 @@ fun LoginButton(enabled: Boolean, onClick: () -> Unit) {
             .fillMaxWidth()
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryColor,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        shape = RoundedCornerShape(24.dp),
+        shape = MaterialTheme.shapes.small,
         elevation = ButtonDefaults.buttonElevation(4.dp)
     ) {
         Text(
             text = "INICIAR SESIÓN",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }
@@ -220,14 +224,13 @@ fun RegisterLink(onClick: () -> Unit) {
     ) {
         Text(
             text = "¿No tienes cuenta? ",
-            color = GrayText,
-            fontSize = 15.sp
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge
         )
         Text(
             text = "Registrarse",
-            color = PrimaryColor,
-            fontWeight = FontWeight.Bold,
-            fontSize = 15.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.clickable { onClick() },
             textDecoration = TextDecoration.Underline
         )
@@ -237,6 +240,9 @@ fun RegisterLink(onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun S_05_IniciarSesionPreview() {
-    val navController = rememberNavController()
-    S_05_IniciarSesion(navController = navController)
+    FerretoolsTheme {
+        val navController = rememberNavController()
+        S_05_IniciarSesion(navController = navController)
+    }
+
 }
