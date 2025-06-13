@@ -24,7 +24,8 @@ class RegistroNegocioViewModel: ViewModel() {
         }
     }
 
-    fun updateState(transform: (RegistroNegocioUiState) -> RegistroNegocioUiState) {
+    // Función para comprobar la validez del forms después de cambiar cualquier valor
+    private fun updateState(transform: (RegistroNegocioUiState) -> RegistroNegocioUiState) {
         _uiState.update { current ->
             val updated = transform(current)
             updated.copy(isFormValid = isFormValid(updated))

@@ -3,15 +3,11 @@ import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
 
-import androidx.compose.runtime.getValue // Para acceso directo al valor
-import androidx.compose.runtime.setValue // Para modificar el valor
 import com.example.ferretools.model.database.Usuario
 import com.example.ferretools.model.enums.RolUsuario
-import com.example.ferretools.model.registro.RegistroUiState
+import com.example.ferretools.model.registro.RegistroUsuarioUiState
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +15,7 @@ import kotlinx.coroutines.flow.update
 
 
 class RegistroUsuarioViewModel: ViewModel() {
-    private val _uiState = MutableStateFlow(RegistroUiState())
+    private val _uiState = MutableStateFlow(RegistroUsuarioUiState())
     val uiState = _uiState.asStateFlow()
 
     private val db = Firebase.firestore
@@ -30,7 +26,7 @@ class RegistroUsuarioViewModel: ViewModel() {
         }
     }
 
-    private fun updateState(transform: (RegistroUiState) -> RegistroUiState) {
+    private fun updateState(transform: (RegistroUsuarioUiState) -> RegistroUsuarioUiState) {
         _uiState.update { current ->
             val updated = transform(current)
             updated.copy(isFormValid = isFormValid(updated))
@@ -89,7 +85,7 @@ class RegistroUsuarioViewModel: ViewModel() {
         _uiState.update { it.copy(showConfirmPassword = !_uiState.value.showConfirmPassword) }
     }
 
-    fun areFieldsFilled(state: RegistroUiState): Boolean {
+    fun areFieldsFilled(state: RegistroUsuarioUiState): Boolean {
         return listOf(
             state.name,
             state.email,
@@ -99,7 +95,7 @@ class RegistroUsuarioViewModel: ViewModel() {
         ).all { it.isNotBlank() }
     }
 
-    private fun isFormValid(state: RegistroUiState): Boolean {
+    private fun isFormValid(state: RegistroUsuarioUiState): Boolean {
         return state.emailError == null &&
                 state.passwordError == null &&
                 state.confirmPasswordError == null &&

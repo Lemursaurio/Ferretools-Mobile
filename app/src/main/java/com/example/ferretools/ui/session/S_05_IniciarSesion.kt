@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +38,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.viewmodel.session.IniciarSesionViewModel
 
 
 @Composable
@@ -48,15 +51,9 @@ fun S_05_IniciarSesion(
     navController: NavController,
     isLoading: Boolean = false,
     errorMessage: String? = null,
-    // viewModel: IniciarSesionViewModel = viewModel() // Para uso futuro
+   iniciarSesionViewModel: IniciarSesionViewModel = viewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
-
-    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    val isPasswordValid = password.length >= 6
-    val isFormValid = isEmailValid && isPasswordValid
+    val iniciarSesionUiState = iniciarSesionViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -79,27 +76,29 @@ fun S_05_IniciarSesion(
 
         LoginFormField(
             label = "Correo electrónico",
-            value = email,
-            onValueChange = { email = it },
+            value = iniciarSesionUiState.value.email,
+            onValueChange = { iniciarSesionViewModel.updateEmail(it) },
             placeholder = "Correo",
             keyboardType = KeyboardType.Email,
-            isError = email.isNotBlank() && !isEmailValid,
-            errorText = if (email.isNotBlank() && !isEmailValid) "Correo inválido" else null
+            isError = iniciarSesionUiState.value.email.isNotBlank() &&
+                    iniciarSesionUiState.value.emailError != null,
+            errorText = iniciarSesionUiState.value.emailError
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         LoginFormField(
             label = "Contraseña",
-            value = password,
-            onValueChange = { password = it },
+            value = iniciarSesionUiState.value.password,
+            onValueChange = { iniciarSesionViewModel.updatePassword(it) },
             placeholder = "Contraseña",
             isPassword = true,
-            showPassword = showPassword,
-            onTogglePassword = { showPassword = !showPassword },
+            showPassword = iniciarSesionUiState.value.showPassword,
+            onTogglePassword = { iniciarSesionViewModel.toggleShowPassword() },
             keyboardType = KeyboardType.Password,
-            isError = password.isNotBlank() && !isPasswordValid,
-            errorText = if (password.isNotBlank() && !isPasswordValid) "Mínimo 6 caracteres" else null
+            isError = iniciarSesionUiState.value.password.isNotBlank() &&
+                    iniciarSesionUiState.value.passwordError != null,
+            errorText = iniciarSesionUiState.value.passwordError
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -117,7 +116,7 @@ fun S_05_IniciarSesion(
             )
         }
 
-        LoginButton(isFormValid && !isLoading) {
+        LoginButton(iniciarSesionUiState.value.isFormValid && !isLoading) {
             // Aquí puedes llamar a tu ViewModel o lógica de login
             // viewModel.login(email, password)
             // Por ahora, navega a la pantalla principal del admin (puedes cambiarlo según el rol)
@@ -125,7 +124,7 @@ fun S_05_IniciarSesion(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        RegisterLink(onClick = { navController.navigate(AppRoutes.Auth.REGISTER_USER) })
+        RegisterLink(onClick = { navController.navigate(AppRoutes.Auth.SELECT_ROLE) })
     }
 }
 
@@ -171,7 +170,7 @@ fun LoginFormField(
         if (isError && errorText != null) {
             Text(
                 text = errorText,
-                color = MaterialTheme.colorScheme.onError,
+                color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 2.dp)
             )

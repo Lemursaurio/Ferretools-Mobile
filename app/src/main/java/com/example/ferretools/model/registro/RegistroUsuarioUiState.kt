@@ -3,7 +3,7 @@ package com.example.ferretools.model.registro
 import android.net.Uri
 import com.example.ferretools.model.enums.RolUsuario
 
-data class RegistroUiState(
+data class RegistroUsuarioUiState(
     var name: String = "",
     var email: String = "",
     var phone: String = "",
