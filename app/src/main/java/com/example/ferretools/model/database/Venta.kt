@@ -1,13 +1,15 @@
-package com.example.ferretools.model
+package com.example.ferretools.model.database
 
 import com.example.ferretools.model.enums.MetodosPago
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 
-data class Compra(
+data class Venta(
     val fecha: Timestamp,
     val total: Double,
     val metodo_pago: MetodosPago,
     val lista_productos: List<ItemUnitario>,
-    val proveedor_id: DocumentReference? = null
+    val usuario_id: DocumentReference? = null
 )
+
+

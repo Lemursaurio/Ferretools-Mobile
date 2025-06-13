@@ -11,7 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.model.Usuario
+import com.example.ferretools.model.database.Usuario
 import com.example.ferretools.model.enums.RolUsuario
 import com.example.ferretools.navigation.AppNavigation
 import com.example.ferretools.theme.FerretoolsTheme
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        probarFirebase()
+//        probarFirebase()
 
 //        probarCrashlytics()
 
@@ -51,7 +51,7 @@ fun probarFirebase() {
         "anndy@unmsm.edu.pe",
         "celular",
         "contra",
-        RolUsuario.Administrador,
+        RolUsuario.ADMIN,
         "aaaaaaaa",
     )
 

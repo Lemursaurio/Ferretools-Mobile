@@ -80,7 +80,7 @@ fun S_01_PortadaBienvenida(
                 // Botón Crear Cuenta
                 Button(
                     onClick = {
-                        navController.navigate(AppRoutes.Auth.REGISTER_USER) {
+                        navController.navigate(AppRoutes.Auth.SELECT_ROLE) {
                             // Opciones de navegación
                             popUpTo(AppRoutes.Auth.WELCOME) { inclusive = true }
                         }

@@ -1,6 +1,9 @@
 package com.example.ferretools.ui.session
 
-import android.util.Patterns
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,13 +33,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -48,29 +50,32 @@ import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.R
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.viewmodel.session.RegistroUsuarioViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.example.ferretools.model.enums.RolUsuario
 
 @Composable
 fun S_03_RegistroUsuario(
     navController: NavController,
+    rolUsuario: RolUsuario,
     isLoading: Boolean = false,
     errorMessage: String? = null,
-    // viewModel: RegistroUsuarioViewModel = viewModel() // Para uso futuro
+    registroUsuarioViewModel: RegistroUsuarioViewModel = viewModel()
 ) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
-    var showConfirmPassword by remember { mutableStateOf(false) }
-    val imageUri by remember { mutableStateOf<String?>(null) }
 
-    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    val isPasswordValid = password.length >= 6
-    val doPasswordsMatch = password == confirmPassword
-    val areFieldsFilled = name.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank()
-    val isFormValid = isEmailValid && isPasswordValid && doPasswordsMatch && areFieldsFilled
+    // Define el rol de usuario en el uiState por única vez
+    LaunchedEffect(rolUsuario) {
+        registroUsuarioViewModel.setRol(rolUsuario)
+    }
 
+    // Define un launcher para elegir fotos
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        registroUsuarioViewModel.updateUri(uri)
+    }
+
+    val registroUsuarioUiState = registroUsuarioViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Column(
@@ -111,12 +116,24 @@ fun S_03_RegistroUsuario(
                 .size(90.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceDim)
-                .clickable { /* TODO: Selector de imagen */ },
+                .clickable {
+                    launcher.launch(
+                        PickVisualMediaRequest(
+                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                },
             contentAlignment = Alignment.Center
         ) {
-            if (imageUri != null) {
+            if (registroUsuarioUiState.value.imageUri != null) {
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data = registroUsuarioUiState.value.imageUri)
+                        .build()
+                )
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painter,
                     contentDescription = "Imagen de perfil",
                     modifier = Modifier.size(90.dp)
                 )
@@ -132,49 +149,62 @@ fun S_03_RegistroUsuario(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        FormField(label = "Nombres completos", value = name, onValueChange = { name = it }, placeholder = "Ingrese sus nombres")
+        FormField(
+            label = "Nombres completos",
+            value = registroUsuarioUiState.value.name,
+            onValueChange = { registroUsuarioViewModel.updateName(it) },
+            placeholder = "Ingrese sus nombres"
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         FormField(
             label = "Correo electrónico",
-            value = email,
-            onValueChange = { email = it },
+            value = registroUsuarioUiState.value.email,
+            onValueChange = { registroUsuarioViewModel.updateEmail(it) },
             placeholder = "Correo",
-            isError = email.isNotBlank() && !isEmailValid,
-            errorText = if (email.isNotBlank() && !isEmailValid) "Correo inválido" else null
+            isError = registroUsuarioUiState.value.email.isNotBlank() &&
+                    registroUsuarioUiState.value.emailError != null,
+            errorText = registroUsuarioUiState.value.emailError
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        FormField(label = "Teléfono", value = phone, onValueChange = { phone = it }, placeholder = "Teléfono")
+        FormField(
+            label = "Teléfono",
+            value = registroUsuarioUiState.value.phone,
+            onValueChange = { registroUsuarioViewModel.updatePhone(it) },
+            placeholder = "Teléfono"
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         FormField(
             label = "Contraseña",
-            value = password,
-            onValueChange = { password = it },
+            value = registroUsuarioUiState.value.password,
+            onValueChange = { registroUsuarioViewModel.updatePassword(it) },
             placeholder = "Contraseña",
             isPassword = true,
-            showPassword = showPassword,
-            onTogglePassword = { showPassword = !showPassword },
-            isError = password.isNotBlank() && !isPasswordValid,
-            errorText = if (password.isNotBlank() && !isPasswordValid) "Mínimo 6 caracteres" else null
+            showPassword = registroUsuarioUiState.value.showPassword,
+            onTogglePassword = { registroUsuarioViewModel.toggleShowPassword() },
+            isError = registroUsuarioUiState.value.password.isNotBlank() &&
+                    registroUsuarioUiState.value.passwordError != null,
+            errorText = registroUsuarioUiState.value.passwordError
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         FormField(
             label = "Confirmar contraseña",
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
+            value = registroUsuarioUiState.value.confirmPassword,
+            onValueChange = { registroUsuarioViewModel.updateConfirmPassword(it) },
             placeholder = "Repite la contraseña",
             isPassword = true,
-            showPassword = showConfirmPassword,
-            onTogglePassword = { showConfirmPassword = !showConfirmPassword },
-            isError = confirmPassword.isNotBlank() && !doPasswordsMatch,
-            errorText = if (confirmPassword.isNotBlank() && !doPasswordsMatch) "Las contraseñas no coinciden" else null
+            showPassword = registroUsuarioUiState.value.showConfirmPassword,
+            onTogglePassword = { registroUsuarioViewModel.toggleShowConfirmPassword() },
+            isError = registroUsuarioUiState.value.confirmPassword.isNotBlank() &&
+                    registroUsuarioUiState.value.confirmPasswordError != null,
+            errorText = registroUsuarioUiState.value.confirmPasswordError
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -194,19 +224,46 @@ fun S_03_RegistroUsuario(
 
         Button(
             onClick = {
-                // Aquí puedes llamar a tu ViewModel o lógica de registro
-                // viewModel.register(name, email, phone, password, imageUri)
-                // Por ahora, navega a la siguiente pantalla
-                navController.navigate(AppRoutes.Auth.REGISTER_BUSINESS)
+                // Crear nuevo usuario
+                val newUser = registroUsuarioViewModel.createNewUser()
+
+                // Ir a siguiente pantalla según el rol
+                when (registroUsuarioUiState.value.rolUsuario) {
+                    RolUsuario.ADMIN -> {
+                        navController.navigate(
+                            AppRoutes.Auth.REGISTER_BUSINESS(newUser)
+                        )
+                    }
+
+                    RolUsuario.CLIENTE -> {
+                        // Registrar usuario
+                        registroUsuarioViewModel.registerUser(newUser)
+
+                        // Navegar a HOME de cliente
+                        navController.navigate(
+                            AppRoutes.Client.DASHBOARD
+                        )
+                    }
+
+                    RolUsuario.ALMACENERO -> {
+                        //Registrar usuario
+                        registroUsuarioViewModel.registerUser(newUser)
+
+                        // Navegar a HOME de almacenero
+                        navController.navigate(
+                            AppRoutes.Employee.DASHBOARD
+                        )
+                    }
+                }
             },
-            enabled = isFormValid && !isLoading,
+            enabled = registroUsuarioUiState.value.isFormValid && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             shape = MaterialTheme.shapes.small,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.onTertiary
             ),
             elevation = ButtonDefaults.buttonElevation(4.dp)
         ) {
@@ -252,9 +309,10 @@ private fun FormField(
             modifier = Modifier.fillMaxWidth()
         )
         if (isError && errorText != null) {
+//            Log.e("DEBUG", errorText)
             Text(
                 text = errorText,
-                color = MaterialTheme.colorScheme.onError,
+                color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 2.dp)
             )
@@ -267,6 +325,6 @@ private fun FormField(
 fun S_03_RegistroUsuarioPreview() {
     FerretoolsTheme {
         val navController = rememberNavController()
-        S_03_RegistroUsuario(navController = navController)
+        S_03_RegistroUsuario(navController = navController, rolUsuario = RolUsuario.ADMIN)
     }
 }

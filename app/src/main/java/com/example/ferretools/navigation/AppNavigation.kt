@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.ferretools.ui.balance.B_01_Balances
 import com.example.ferretools.ui.balance.B_02_Detalles
 import com.example.ferretools.ui.balance.B_03_Reporte
@@ -91,11 +92,20 @@ fun AppNavigation(navController: NavHostController) {
         composable(AppRoutes.Auth.SELECT_ROLE) {
             S_02_SeleccionRol(navController = navController)
         }
-        composable(AppRoutes.Auth.REGISTER_USER) {
-            S_03_RegistroUsuario(navController = navController)
+        // Ruta type-safe con parámetro
+        composable<AppRoutes.Auth.REGISTER_USER> { backStackEntry ->
+            val registerUser: AppRoutes.Auth.REGISTER_USER = backStackEntry.toRoute()
+            S_03_RegistroUsuario(
+                navController = navController,
+                rolUsuario = registerUser.rolUsuario
+            )
         }
-        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
-            S_04_RegistroNegocio(navController = navController)
+        composable<AppRoutes.Auth.REGISTER_BUSINESS> { backStackEntry ->
+            val registerBusiness: AppRoutes.Auth.REGISTER_BUSINESS = backStackEntry.toRoute()
+            S_04_RegistroNegocio(
+                navController = navController,
+                newUser = registerBusiness.newUser
+            )
         }
         composable(AppRoutes.Auth.LOGIN) {
             S_05_IniciarSesion(navController = navController)

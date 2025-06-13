@@ -37,12 +37,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.model.database.Usuario
+import com.example.ferretools.model.enums.RolUsuario
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
 
 @Composable
 fun S_04_RegistroNegocio(
     navController: NavController,
+    newUser: Usuario,
     isLoading: Boolean = false,
     errorMessage: String? = null,
     // viewModel: RegistroNegocioViewModel = viewModel() // Para uso futuro
@@ -187,7 +190,16 @@ fun BusinessLogoPicker(logoUri: String?, onClick: () -> Unit) {
 fun S_04_RegistroNegocioPreview() {
     FerretoolsTheme {
         val navController = rememberNavController()
-        S_04_RegistroNegocio(navController = navController)
+        S_04_RegistroNegocio(
+            navController = navController,
+            newUser = Usuario(
+                nombre = "",
+                correo = "",
+                celular = "",
+                contrasena = "",
+                rol = RolUsuario.ADMIN
+            )
+        )
     }
 
 }

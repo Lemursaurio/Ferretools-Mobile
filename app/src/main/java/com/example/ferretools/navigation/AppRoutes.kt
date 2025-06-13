@@ -1,5 +1,9 @@
 package com.example.ferretools.navigation
 
+import com.example.ferretools.model.database.Usuario
+import com.example.ferretools.model.enums.RolUsuario
+import kotlinx.serialization.Serializable
+
 /**
  * Objeto que contiene todas las rutas de navegación de la aplicación.
  * Las rutas están organizadas por secciones para mejor mantenimiento.
@@ -9,11 +13,15 @@ object AppRoutes {
     object Auth {
         const val WELCOME = "welcome"
         const val SELECT_ROLE = "select_role"
-        const val REGISTER_USER = "register_user"
-        const val REGISTER_BUSINESS = "register_business"
         const val LOGIN = "login"
         const val RECOVER_PASSWORD = "recover_password"
         const val CHANGE_PASSWORD = "change_password"
+
+        @Serializable
+        data class REGISTER_USER(val rolUsuario: RolUsuario)
+
+        @Serializable
+        data class REGISTER_BUSINESS(val newUser: Usuario)
     }
 
     // Rutas de Admin

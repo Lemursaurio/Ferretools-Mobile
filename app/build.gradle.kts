@@ -5,6 +5,7 @@ plugins {
     // Plugin de Gradle de Google Services
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -43,7 +44,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,6 +66,8 @@ dependencies {
     implementation ("io.coil-kt:coil-compose:2.2.2")
     implementation ("androidx.navigation:navigation-compose:2.7.5")
     implementation ("androidx.compose.material:material:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+    implementation("androidx.activity:activity-compose:1.10.1")
 
     // BoM de Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
