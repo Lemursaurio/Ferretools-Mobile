@@ -113,12 +113,11 @@ class RegistroUsuarioViewModel: ViewModel() {
             celular = _uiState.value.phone,
             contrasena = _uiState.value.password,
             foto = _uiState.value.imageUri,
-            rol = _uiState.value.rolUsuario,
-            negocio = ""
+            rol = _uiState.value.rolUsuario
         )
     }
 
-    fun registerUser(newUser: Usuario) {
+    fun registerUser(newUser: Usuario): String {
 
         val docRef = db.collection("usuarios").document()
 
@@ -129,6 +128,8 @@ class RegistroUsuarioViewModel: ViewModel() {
             .addOnFailureListener {
                 Log.e("FIREBASE", "Error: ${it.message}")
             }
+
+        return docRef.id
     }
 
 }

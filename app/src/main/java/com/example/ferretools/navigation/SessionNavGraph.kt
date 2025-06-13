@@ -28,9 +28,9 @@ fun SessionNavGraph(
 //        composable(AppRoutes.Auth.REGISTER_USER) {
 //            S_03_RegistroUsuario(navController = navController)
 //        }
-        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
-            S_04_RegistroNegocio(navController = navController)
-        }
+//        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
+//            S_04_RegistroNegocio(navController = navController)
+//        }
         composable(AppRoutes.Auth.LOGIN) {
             S_05_IniciarSesion(navController = navController)
         }

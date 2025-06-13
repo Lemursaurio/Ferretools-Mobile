@@ -21,7 +21,7 @@ object AppRoutes {
         data class REGISTER_USER(val rolUsuario: RolUsuario)
 
         @Serializable
-        data class REGISTER_BUSINESS(val newUser: Usuario)
+        data class REGISTER_BUSINESS(val ownerId: String)
     }
 
     // Rutas de Admin

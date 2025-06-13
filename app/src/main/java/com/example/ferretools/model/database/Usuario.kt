@@ -13,5 +13,4 @@ data class Usuario(
     val contrasena: String,
     @Contextual val foto: Uri? = null,
     val rol: RolUsuario,
-    val negocio: String? = null,
 )

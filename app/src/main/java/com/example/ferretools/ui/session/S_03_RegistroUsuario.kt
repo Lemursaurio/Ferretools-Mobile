@@ -230,8 +230,12 @@ fun S_03_RegistroUsuario(
                 // Ir a siguiente pantalla según el rol
                 when (registroUsuarioUiState.value.rolUsuario) {
                     RolUsuario.ADMIN -> {
+                        // Registrar usuario y obtener id guardado
+                        val userId = registroUsuarioViewModel.registerUser(newUser)
+
+                        // Navegar a crear negocio
                         navController.navigate(
-                            AppRoutes.Auth.REGISTER_BUSINESS(newUser)
+                            AppRoutes.Auth.REGISTER_BUSINESS(userId)
                         )
                     }
 

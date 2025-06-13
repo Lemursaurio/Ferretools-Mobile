@@ -1,5 +1,9 @@
 package com.example.ferretools.ui.session
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,39 +28,44 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.model.database.Usuario
-import com.example.ferretools.model.enums.RolUsuario
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.viewmodel.session.RegistroNegocioViewModel
 
 @Composable
 fun S_04_RegistroNegocio(
     navController: NavController,
-    newUser: Usuario,
+    ownerId: String,
     isLoading: Boolean = false,
     errorMessage: String? = null,
-    // viewModel: RegistroNegocioViewModel = viewModel() // Para uso futuro
+    registroNegocioViewModel: RegistroNegocioViewModel = viewModel()
 ) {
-    var businessName by remember { mutableStateOf("") }
-    var businessType by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
-    var ruc by remember { mutableStateOf("") }
-    val logoUri by remember { mutableStateOf<String?>(null) }
+    // Define el nuevo usuario por única vez
+    LaunchedEffect(ownerId) {
+        registroNegocioViewModel.setOwnerId(ownerId)
+    }
 
-    val isFormValid = businessName.isNotBlank() && businessType.isNotBlank() && address.isNotBlank()
+    // Define un launcher para elegir fotos
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        registroNegocioViewModel.updateLogoUri(uri)
+    }
+
+    val registroNegocioUiState = registroNegocioViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -89,22 +98,83 @@ fun S_04_RegistroNegocio(
             textAlign = TextAlign.Center
         )
 
-        BusinessLogoPicker(logoUri = logoUri, onClick = {
-            // TODO: Lógica para seleccionar imagen
-        })
+        Box(
+            modifier = Modifier
+                .size(90.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceDim)
+                .clickable {
+                    launcher.launch(
+                        PickVisualMediaRequest(
+                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            if (registroNegocioUiState.value.logoUri != null) {
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data = registroNegocioUiState.value.logoUri)
+                        .build()
+                )
+                Image(
+                    painter = painter,
+                    contentDescription = "Imagen de perfil",
+                    modifier = Modifier.size(90.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = if (registroNegocioUiState.value.logoUri == null)
+                        "Agregar logo del negocio" else "Logo del negocio",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(54.dp)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        BusinessFormField("Nombre del negocio", businessName, { businessName = it }, "Nombre de la Empresa")
+        BusinessFormField(
+            label = "Nombre del negocio",
+            value = registroNegocioUiState.value.businessName,
+            onValueChange = { registroNegocioViewModel.updateBusinessName(it) },
+            placeholder = "Nombre de la Empresa"
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        BusinessFormField("Rubro del negocio", businessType, { businessType = it }, "Ferretería, farmacia, etc.")
+
+        BusinessFormField(
+            label = "Rubro del negocio",
+            value = registroNegocioUiState.value.businessType,
+            onValueChange = { registroNegocioViewModel.updateBusinessType(it) },
+            placeholder = "Ferretería, farmacia, etc."
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        BusinessFormField("Dirección", address, { address = it }, "Dirección")
+
+        BusinessFormField(
+            label = "Dirección",
+            value = registroNegocioUiState.value.address,
+            onValueChange = { registroNegocioViewModel.updateAddress(it) },
+            placeholder ="Dirección"
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        BusinessFormField("R.U.C.", ruc, { ruc = it }, "R.U.C.")
+
+        BusinessFormField(
+            label = "R.U.C.",
+            value = registroNegocioUiState.value.ruc,
+            onValueChange = { registroNegocioViewModel.updateRuc(it) },
+            placeholder = "R.U.C."
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
+
         HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+
         Spacer(modifier = Modifier.height(24.dp))
 
         errorMessage?.let {
@@ -118,16 +188,16 @@ fun S_04_RegistroNegocio(
 
         Button(
             onClick = {
-                // Aquí puedes llamar a tu ViewModel o lógica de registro
-                // viewModel.registerBusiness(businessName, businessType, address, ruc, logoUri)
-                // Por ahora, navega a la pantalla de login
-                navController.navigate(AppRoutes.Auth.LOGIN)
+                // Guardar negocio
+                registroNegocioViewModel.registerBusiness()
+                // Ir a la pantalla de HOME administrador
+                navController.navigate(AppRoutes.Admin.DASHBOARD)
             },
-            enabled = isFormValid && !isLoading,
+            enabled = registroNegocioUiState.value.isFormValid && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
             shape = MaterialTheme.shapes.small,
             elevation = ButtonDefaults.buttonElevation(4.dp)
         ) {
@@ -166,25 +236,6 @@ fun BusinessFormField(
     }
 }
 
-@Composable
-fun BusinessLogoPicker(logoUri: String?, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(90.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceDim)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = if (logoUri == null) "Agregar logo del negocio" else "Logo del negocio",
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(54.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun S_04_RegistroNegocioPreview() {
@@ -192,13 +243,7 @@ fun S_04_RegistroNegocioPreview() {
         val navController = rememberNavController()
         S_04_RegistroNegocio(
             navController = navController,
-            newUser = Usuario(
-                nombre = "",
-                correo = "",
-                celular = "",
-                contrasena = "",
-                rol = RolUsuario.ADMIN
-            )
+            ownerId = "123456"
         )
     }
 

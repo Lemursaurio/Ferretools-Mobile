@@ -104,7 +104,7 @@ fun AppNavigation(navController: NavHostController) {
             val registerBusiness: AppRoutes.Auth.REGISTER_BUSINESS = backStackEntry.toRoute()
             S_04_RegistroNegocio(
                 navController = navController,
-                newUser = registerBusiness.newUser
+                ownerId = registerBusiness.ownerId
             )
         }
         composable(AppRoutes.Auth.LOGIN) {
