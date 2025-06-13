@@ -12,9 +12,11 @@ import com.example.ferretools.ui.home.HOME_Empleado
 import com.example.ferretools.ui.home.PedidoPendiente
 import com.example.ferretools.ui.inventario.I_01_ListaProductos
 import com.example.ferretools.ui.inventario.I_05_ReporteProducto
+import com.example.ferretools.ui.inventario.I_06_EditarProducto
 import com.example.ferretools.ui.inventario.I_08_ListaCategorias
 import com.example.ferretools.ui.inventario.I_09_CrearCategoria
 import com.example.ferretools.ui.inventario.I_10_DetallesCategoria
+import com.example.ferretools.ui.inventario.ProductoViewModel
 import com.example.ferretools.ui.venta.V_01_CarritoVenta
 import com.example.ferretools.ui.venta.V_02_ResumenCarritoVenta
 import com.example.ferretools.ui.venta.V_04_VentaExitosa

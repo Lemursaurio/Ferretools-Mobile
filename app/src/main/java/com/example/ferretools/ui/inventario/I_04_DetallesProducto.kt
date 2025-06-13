@@ -61,7 +61,10 @@ fun I_04_DetallesProducto(
                 .padding(vertical = 12.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.padding(top = 30.dp)
+            ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás", tint = Color.Black)
             }
             Text(
@@ -69,7 +72,7 @@ fun I_04_DetallesProducto(
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp, top = 30.dp,)
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -119,7 +122,9 @@ fun I_04_DetallesProducto(
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(
-                onClick = { /* TODO */ },
+                onClick = { 
+                    navController.navigate(AppRoutes.Inventory.EDIT_PRODUCT)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF222222)),
                 modifier = Modifier.weight(1f)
             ) {
@@ -185,7 +190,7 @@ fun DetalleCampo(label: String, value: String, multiline: Boolean = false) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewEditarProductoScreen() {
     val navController = rememberNavController()

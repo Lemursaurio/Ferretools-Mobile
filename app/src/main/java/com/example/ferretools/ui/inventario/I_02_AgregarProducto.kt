@@ -47,7 +47,10 @@ fun I_02_AgregarProducto(
                 .padding(vertical = 12.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.padding(top = 30.dp)
+            ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = Color.Black)
             }
             Text(
@@ -55,7 +58,7 @@ fun I_02_AgregarProducto(
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp, top = 30.dp)
             )
         }
         // Formulario desplazable
@@ -215,7 +218,7 @@ fun I_02_AgregarProducto(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun I_02_AgregarProductoPreview() {
     val navController = rememberNavController()

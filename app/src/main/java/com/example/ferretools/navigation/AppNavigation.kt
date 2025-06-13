@@ -25,6 +25,7 @@ import com.example.ferretools.ui.inventario.I_01_ListaProductos
 import com.example.ferretools.ui.inventario.I_02_AgregarProducto
 import com.example.ferretools.ui.inventario.I_04_DetallesProducto
 import com.example.ferretools.ui.inventario.I_05_ReporteProducto
+import com.example.ferretools.ui.inventario.I_06_EditarProducto
 import com.example.ferretools.ui.inventario.I_08_ListaCategorias
 import com.example.ferretools.ui.inventario.I_09_CrearCategoria
 import com.example.ferretools.ui.inventario.I_10_DetallesCategoria
@@ -167,6 +168,13 @@ fun AppNavigation(navController: NavHostController) {
         }
         composable(AppRoutes.Inventory.PRODUCT_DETAILS) {
             I_04_DetallesProducto(navController = navController)
+        }
+        composable(AppRoutes.Inventory.EDIT_PRODUCT) {
+            val viewModel: ProductoViewModel = viewModel()
+            I_06_EditarProducto(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
         composable(AppRoutes.Inventory.PRODUCT_REPORT) {
             I_05_ReporteProducto(navController = navController)

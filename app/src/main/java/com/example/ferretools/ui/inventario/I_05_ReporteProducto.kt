@@ -29,7 +29,11 @@ fun I_05_ReporteProducto(
     // viewModel: ReporteProductoViewModel = viewModel() // Para uso futuro
 ) {
     Scaffold(
-        topBar = { TopNavBar(navController, "Reporte por Producto") }
+        topBar = { TopNavBar(navController, "Reporte por Producto") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF22D366))
+            .padding(vertical = 30.dp)
     ) { padding ->
 
         Column(
@@ -158,7 +162,7 @@ fun I_05_ReporteProducto(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun I_05_ReporteProductoPreview() {
     val navController = rememberNavController()

@@ -2,12 +2,10 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.compose) apply false
 
-    // Dependencia para el plugin de Gradle de Google Services
-    id("com.google.gms.google-services") version "4.4.2" apply false
+    // Dependencia para el plugin de Google Services
+    id("com.google.gms.google-services") version "4.4.0" apply false
 
     // Dependencia para el plugin de Crashlytics
-    id("com.google.firebase.crashlytics") version "3.0.3" apply false
-
+    id("com.google.firebase.crashlytics") version "2.9.9" apply false
 }

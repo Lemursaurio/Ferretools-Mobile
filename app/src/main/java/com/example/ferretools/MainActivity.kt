@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        probarFirebase()
+       // probarFirebase()
 
 //        probarCrashlytics()
 
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun probarFirebase() {
+/*fun probarFirebase() {
     // Inicializar Firebase
     val db = Firebase.firestore
 
@@ -83,7 +83,7 @@ fun probarFirebase() {
 fun probarCrashlytics() {
     throw RuntimeException("Testeo de Crashlytics")
 }
-
+*/
 @Composable
 fun MainScreen() {
     FerretoolsTheme {

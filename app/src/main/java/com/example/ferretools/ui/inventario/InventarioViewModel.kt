@@ -10,7 +10,7 @@ open class InventarioViewModel : ViewModel() {
     init {
         // Agregar categorías predefinidas
         _categorias.addAll(listOf(
-            "Herramientas Manuales",
+            "Herramientas de mano",
             "Herramientas Eléctricas",
             "Pinturas y Accesorios",
             "Plomería",

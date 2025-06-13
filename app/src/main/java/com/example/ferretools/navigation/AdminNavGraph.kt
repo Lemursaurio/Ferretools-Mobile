@@ -50,6 +50,13 @@ fun NavGraphBuilder.adminNavGraph(navController: NavHostController) {
         composable(AppRoutes.Inventory.PRODUCT_DETAILS) {
             I_05_ReporteProducto(navController = navController)
         }
+        composable(AppRoutes.Inventory.EDIT_PRODUCT) {
+            val viewModel: ProductoViewModel = viewModel()
+            I_06_EditarProducto(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
         composable(AppRoutes.Inventory.LIST_CATEGORIES) {
             I_08_ListaCategorias(navController = navController)
         }
