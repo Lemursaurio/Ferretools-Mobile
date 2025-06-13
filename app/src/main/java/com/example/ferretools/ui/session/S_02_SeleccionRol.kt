@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AdminPanelSettings
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Warehouse
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -24,33 +20,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.model.enums.RolUsuario
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.viewmodel.session.SeleccionRolViewModel
 
-enum class RolUsuario2(val displayName: String, val icon: ImageVector) {
-    ADMIN("Administrador", Icons.Default.AdminPanelSettings),
-    CLIENTE("Cliente", Icons.Default.Person),
-    ALMACENERO("Almacenero", Icons.Default.Warehouse)
-}
 
 @Composable
 fun S_02_SeleccionRol(
     navController: NavController,
-    modifier: Modifier = Modifier
-    // viewModel: SeleccionRolViewModel = viewModel() // Para uso futuro
+    modifier: Modifier = Modifier,
+    seleccionRolViewModel: SeleccionRolViewModel = viewModel()
 ) {
-    var selectedRole by remember { mutableStateOf<RolUsuario2?>(null) }
+    val seleccionRolUiState = seleccionRolViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -68,12 +59,12 @@ fun S_02_SeleccionRol(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        RolUsuario2.entries.forEach { rol ->
+        RolUsuario.entries.forEach { rol ->
             RoleCard(
-                title = rol.displayName,
+                title = rol.titulo,
                 icon = rol.icon,
-                selected = selectedRole == rol,
-                onClick = { selectedRole = rol }
+                selected = seleccionRolUiState.value.rolUsuario == rol,
+                onClick = { seleccionRolViewModel.updateRol(rol) }
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -82,20 +73,26 @@ fun S_02_SeleccionRol(
 
         Button(
             onClick = {
-                when (selectedRole) {
-                    RolUsuario2.ADMIN -> navController.navigate(AppRoutes.Auth.REGISTER_USER)
-                    RolUsuario2.CLIENTE -> navController.navigate(AppRoutes.Auth.REGISTER_USER)
-                    RolUsuario2.ALMACENERO -> navController.navigate(AppRoutes.Auth.REGISTER_USER)
+                when (seleccionRolUiState.value.rolUsuario) {
+                    RolUsuario.ADMIN -> navController.navigate(
+                        AppRoutes.Auth.REGISTER_USER(RolUsuario.ADMIN)
+                    )
+                    RolUsuario.CLIENTE -> navController.navigate(
+                        AppRoutes.Auth.REGISTER_USER(RolUsuario.CLIENTE)
+                    )
+                    RolUsuario.ALMACENERO -> navController.navigate(
+                        AppRoutes.Auth.REGISTER_USER(RolUsuario.ALMACENERO)
+                    )
                     null -> {} // No hacer nada si no hay selección
                 }
             },
-            enabled = selectedRole != null,
+            enabled = seleccionRolUiState.value.rolUsuario != null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.onTertiary
             ),
             shape = MaterialTheme.shapes.small,
             elevation = ButtonDefaults.buttonElevation(4.dp)
@@ -116,7 +113,7 @@ fun RoleCard(
     onClick: () -> Unit
 ) {
     val backgroundColor = if (selected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.secondary
+                            else MaterialTheme.colorScheme.primaryContainer
 
     val contentColor = if (selected) MaterialTheme.colorScheme.onPrimary
                             else MaterialTheme.colorScheme.onSecondary

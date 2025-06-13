@@ -1,4 +1,4 @@
-package com.example.ferretools.model
+package com.example.ferretools.model.database
 
 data class Producto(
     val nombre: String,

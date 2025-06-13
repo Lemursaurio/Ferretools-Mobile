@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ferretools.ui.session.*
-import com.example.ferretools.ui.session.RolUsuario2
 
 @Composable
 fun SessionNavGraph(
@@ -26,12 +25,12 @@ fun SessionNavGraph(
         composable(AppRoutes.Auth.SELECT_ROLE) {
             S_02_SeleccionRol(navController = navController)
         }
-        composable(AppRoutes.Auth.REGISTER_USER) {
-            S_03_RegistroUsuario(navController = navController)
-        }
-        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
-            S_04_RegistroNegocio(navController = navController)
-        }
+//        composable(AppRoutes.Auth.REGISTER_USER) {
+//            S_03_RegistroUsuario(navController = navController)
+//        }
+//        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
+//            S_04_RegistroNegocio(navController = navController)
+//        }
         composable(AppRoutes.Auth.LOGIN) {
             S_05_IniciarSesion(navController = navController)
         }
