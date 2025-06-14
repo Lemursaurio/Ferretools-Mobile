@@ -100,12 +100,9 @@ fun AppNavigation(navController: NavHostController) {
                 rolUsuario = registerUser.rolUsuario
             )
         }
-        composable<AppRoutes.Auth.REGISTER_BUSINESS> { backStackEntry ->
-            val registerBusiness: AppRoutes.Auth.REGISTER_BUSINESS = backStackEntry.toRoute()
-            S_04_RegistroNegocio(
-                navController = navController,
-                ownerId = registerBusiness.ownerId
-            )
+        composable(AppRoutes.Auth.REGISTER_BUSINESS) {
+            S_04_RegistroNegocio(navController = navController)
+
         }
         composable(AppRoutes.Auth.LOGIN) {
             S_05_IniciarSesion(navController = navController)

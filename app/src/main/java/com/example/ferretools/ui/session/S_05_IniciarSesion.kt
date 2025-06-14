@@ -1,6 +1,5 @@
 package com.example.ferretools.ui.session
 
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,8 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.ferretools.model.enums.RolUsuario
 import com.example.ferretools.navigation.AppRoutes
 import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.utils.SesionUsuario
 import com.example.ferretools.viewmodel.session.IniciarSesionViewModel
 
 
@@ -51,9 +49,24 @@ fun S_05_IniciarSesion(
     navController: NavController,
     isLoading: Boolean = false,
     errorMessage: String? = null,
-   iniciarSesionViewModel: IniciarSesionViewModel = viewModel()
+    iniciarSesionViewModel: IniciarSesionViewModel = viewModel()
 ) {
     val iniciarSesionUiState = iniciarSesionViewModel.uiState.collectAsState()
+
+    LaunchedEffect(iniciarSesionUiState.value.loginSuccessful) {
+        when (SesionUsuario.usuario?.rol) {
+            RolUsuario.ADMIN -> {
+                navController.navigate(AppRoutes.Admin.DASHBOARD)
+            }
+            RolUsuario.CLIENTE -> {
+                navController.navigate(AppRoutes.Client.DASHBOARD)
+            }
+            RolUsuario.ALMACENERO -> {
+                navController.navigate(AppRoutes.Employee.DASHBOARD)
+            }
+            else -> {}
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -117,10 +130,8 @@ fun S_05_IniciarSesion(
         }
 
         LoginButton(iniciarSesionUiState.value.isFormValid && !isLoading) {
-            // Aquí puedes llamar a tu ViewModel o lógica de login
-            // viewModel.login(email, password)
-            // Por ahora, navega a la pantalla principal del admin (puedes cambiarlo según el rol)
-            navController.navigate(AppRoutes.Admin.DASHBOARD)
+            // Iniciar sesión
+            iniciarSesionViewModel.loginUser()
         }
 
         Spacer(modifier = Modifier.height(16.dp))

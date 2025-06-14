@@ -17,5 +17,6 @@ data class RegistroUsuarioUiState(
     val passwordError: String? = "",
     val confirmPasswordError: String? = "",
     val areFieldsFilled: Boolean = false,
-    val isFormValid: Boolean = false
+    val isFormValid: Boolean = false,
+    val registerSuccessful: Boolean = false
 )

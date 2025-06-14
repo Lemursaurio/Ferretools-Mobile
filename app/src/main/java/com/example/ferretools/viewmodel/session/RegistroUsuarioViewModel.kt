@@ -1,13 +1,14 @@
 package com.example.ferretools.viewmodel.session
+
 import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-
-import com.example.ferretools.model.database.Usuario
 import com.example.ferretools.model.enums.RolUsuario
 import com.example.ferretools.model.registro.RegistroUsuarioUiState
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +19,8 @@ class RegistroUsuarioViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(RegistroUsuarioUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val db = Firebase.firestore
+    val db = Firebase.firestore
+    val auth = Firebase.auth
 
     fun setRol(rolUsuario: RolUsuario) {
         _uiState.update {
@@ -102,30 +104,51 @@ class RegistroUsuarioViewModel: ViewModel() {
                 areFieldsFilled(state)
     }
 
-    fun createNewUser(): Usuario {
-        return Usuario(
-            nombre = _uiState.value.name,
-            correo = _uiState.value.email,
-            celular = _uiState.value.phone,
-            contrasena = _uiState.value.password,
-            foto = _uiState.value.imageUri,
-            rol = _uiState.value.rolUsuario
-        )
-    }
+    fun registerUser() {
+        auth.createUserWithEmailAndPassword(_uiState.value.email, _uiState.value.password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Si el registro es exitoso
+                    Log.e("TAG", "Registro exitoso")
 
-    fun registerUser(newUser: Usuario): String {
+                    val uid = auth.currentUser?.uid
 
-        val docRef = db.collection("usuarios").document()
+                    val userMap = mapOf(
+                        "nombre" to _uiState.value.name,
+                        "celular" to _uiState.value.phone,
+                        "foto" to _uiState.value.imageUri,
+                        "rol" to _uiState.value.rolUsuario
+                    )
 
-        docRef.set(newUser)
-            .addOnSuccessListener {
-                Log.d("FIREBASE", "Documento creado correctamente")
+                    uid?.let {
+                        db.collection("usuarios")
+                            .document(uid)
+                            .set(userMap)
+                            .addOnSuccessListener {
+                                Log.d("TAG", "Usuario guardado en Firestore")
+
+                                // Si registro en Auth y Firestore es exitoso, cambiar estado
+                                _uiState.update {
+                                    it.copy(registerSuccessful = true)
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("TAG", "Error al guardar en Firestore")
+                            }
+                    }
+
+                } else {
+                    when (task.exception) {
+                        is FirebaseAuthUserCollisionException -> {
+                            _uiState.update {
+                                it.copy(emailError = "Ese correo ya se encuentra en uso")
+                            }
+                        }
+                    }
+                    // Si el registro falla
+                    Log.e("TAG", "Registro fallido")
+                }
             }
-            .addOnFailureListener {
-                Log.e("FIREBASE", "Error: ${it.message}")
-            }
-
-        return docRef.id
     }
 
 }

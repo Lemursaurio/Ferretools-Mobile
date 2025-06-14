@@ -13,15 +13,13 @@ object AppRoutes {
     object Auth {
         const val WELCOME = "welcome"
         const val SELECT_ROLE = "select_role"
+        const val REGISTER_BUSINESS = "register_business"
         const val LOGIN = "login"
         const val RECOVER_PASSWORD = "recover_password"
         const val CHANGE_PASSWORD = "change_password"
 
         @Serializable
         data class REGISTER_USER(val rolUsuario: RolUsuario)
-
-        @Serializable
-        data class REGISTER_BUSINESS(val ownerId: String)
     }
 
     // Rutas de Admin

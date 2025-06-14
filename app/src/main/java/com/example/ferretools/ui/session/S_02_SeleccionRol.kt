@@ -83,7 +83,7 @@ fun S_02_SeleccionRol(
                     RolUsuario.ALMACENERO -> navController.navigate(
                         AppRoutes.Auth.REGISTER_USER(RolUsuario.ALMACENERO)
                     )
-                    null -> {} // No hacer nada si no hay selección
+                    null -> {}
                 }
             },
             enabled = seleccionRolUiState.value.rolUsuario != null,

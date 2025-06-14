@@ -1,6 +1,5 @@
 package com.example.ferretools.ui.session
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,22 +38,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.ferretools.R
-import com.example.ferretools.navigation.AppRoutes
-import com.example.ferretools.theme.FerretoolsTheme
-import com.example.ferretools.viewmodel.session.RegistroUsuarioViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.ferretools.model.enums.RolUsuario
+import com.example.ferretools.navigation.AppRoutes
+import com.example.ferretools.theme.FerretoolsTheme
+import com.example.ferretools.viewmodel.session.RegistroUsuarioViewModel
 
 @Composable
 fun S_03_RegistroUsuario(
@@ -64,19 +61,45 @@ fun S_03_RegistroUsuario(
     errorMessage: String? = null,
     registroUsuarioViewModel: RegistroUsuarioViewModel = viewModel()
 ) {
-
-    // Define el rol de usuario en el uiState por única vez
-    LaunchedEffect(rolUsuario) {
-        registroUsuarioViewModel.setRol(rolUsuario)
-    }
+    val registroUsuarioUiState = registroUsuarioViewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     // Define un launcher para elegir fotos
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         registroUsuarioViewModel.updateUri(uri)
     }
 
-    val registroUsuarioUiState = registroUsuarioViewModel.uiState.collectAsState()
-    val scrollState = rememberScrollState()
+    // Define el rol de usuario en el uiState por única vez
+    LaunchedEffect(rolUsuario) {
+        registroUsuarioViewModel.setRol(rolUsuario)
+    }
+
+    // Cambia de pantalla cuando se confirma que el registro es exitoso
+    LaunchedEffect(registroUsuarioUiState.value.registerSuccessful) {
+        when (registroUsuarioUiState.value.rolUsuario) {
+            RolUsuario.ADMIN -> {
+                if (registroUsuarioUiState.value.isFormValid) {
+                    navController.navigate(
+                        AppRoutes.Auth.REGISTER_BUSINESS
+                    )
+                }
+            }
+            RolUsuario.CLIENTE -> {
+                if (registroUsuarioUiState.value.isFormValid) {
+                    navController.navigate(
+                        AppRoutes.Client.DASHBOARD
+                    )
+                }
+            }
+            RolUsuario.ALMACENERO -> {
+                if (registroUsuarioUiState.value.isFormValid) {
+                    navController.navigate(
+                        AppRoutes.Employee.DASHBOARD
+                    )
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -224,41 +247,8 @@ fun S_03_RegistroUsuario(
 
         Button(
             onClick = {
-                // Crear nuevo usuario
-                val newUser = registroUsuarioViewModel.createNewUser()
-
-                // Ir a siguiente pantalla según el rol
-                when (registroUsuarioUiState.value.rolUsuario) {
-                    RolUsuario.ADMIN -> {
-                        // Registrar usuario y obtener id guardado
-                        val userId = registroUsuarioViewModel.registerUser(newUser)
-
-                        // Navegar a crear negocio
-                        navController.navigate(
-                            AppRoutes.Auth.REGISTER_BUSINESS(userId)
-                        )
-                    }
-
-                    RolUsuario.CLIENTE -> {
-                        // Registrar usuario
-                        registroUsuarioViewModel.registerUser(newUser)
-
-                        // Navegar a HOME de cliente
-                        navController.navigate(
-                            AppRoutes.Client.DASHBOARD
-                        )
-                    }
-
-                    RolUsuario.ALMACENERO -> {
-                        //Registrar usuario
-                        registroUsuarioViewModel.registerUser(newUser)
-
-                        // Navegar a HOME de almacenero
-                        navController.navigate(
-                            AppRoutes.Employee.DASHBOARD
-                        )
-                    }
-                }
+                // Registrar usuario
+                registroUsuarioViewModel.registerUser()
             },
             enabled = registroUsuarioUiState.value.isFormValid && !isLoading,
             modifier = Modifier

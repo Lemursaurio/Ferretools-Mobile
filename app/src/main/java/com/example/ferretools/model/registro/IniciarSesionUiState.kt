@@ -6,5 +6,7 @@ data class IniciarSesionUiState(
     val showPassword: Boolean = false,
     val emailError: String? = null,
     val passwordError: String? = null,
-    val isFormValid: Boolean = false
+    val isFormValid: Boolean = false,
+    val isCredentialError: Boolean = false,
+    val loginSuccessful: Boolean = false
 )
