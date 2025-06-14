@@ -4,9 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.ferretools.model.database.Negocio
-import com.example.ferretools.model.database.Usuario
 import com.example.ferretools.model.registro.RegistroNegocioUiState
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,15 +16,11 @@ class RegistroNegocioViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(RegistroNegocioUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val auth = Firebase.auth
     private val db = Firebase.firestore
 
-    fun setOwnerId(ownerId: String) {
-        _uiState.update {
-            it.copy(ownerId = ownerId)
-        }
-    }
-
-    fun updateState(transform: (RegistroNegocioUiState) -> RegistroNegocioUiState) {
+    // Función para comprobar la validez del forms después de cambiar cualquier valor
+    private fun updateState(transform: (RegistroNegocioUiState) -> RegistroNegocioUiState) {
         _uiState.update { current ->
             val updated = transform(current)
             updated.copy(isFormValid = isFormValid(updated))
@@ -67,7 +63,7 @@ class RegistroNegocioViewModel: ViewModel() {
             tipo = _uiState.value.businessType,
             direccion = _uiState.value.address,
             ruc = _uiState.value.ruc,
-            gerenteId = _uiState.value.ownerId,
+            gerenteId = auth.currentUser?.uid,
             logoUri = _uiState.value.logoUri
         )
 
@@ -75,7 +71,7 @@ class RegistroNegocioViewModel: ViewModel() {
 
         docRef.set(newBusiness)
             .addOnSuccessListener {
-                Log.d("FIREBASE", "Documento creado correctamente")
+                Log.e("FIREBASE", "Documento creado correctamente")
             }
             .addOnFailureListener {
                 Log.e("FIREBASE", "Error: ${it.message}")

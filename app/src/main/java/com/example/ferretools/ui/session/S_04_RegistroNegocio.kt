@@ -28,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,15 +49,10 @@ import com.example.ferretools.viewmodel.session.RegistroNegocioViewModel
 @Composable
 fun S_04_RegistroNegocio(
     navController: NavController,
-    ownerId: String,
     isLoading: Boolean = false,
     errorMessage: String? = null,
     registroNegocioViewModel: RegistroNegocioViewModel = viewModel()
 ) {
-    // Define el nuevo usuario por única vez
-    LaunchedEffect(ownerId) {
-        registroNegocioViewModel.setOwnerId(ownerId)
-    }
 
     // Define un launcher para elegir fotos
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -242,8 +236,7 @@ fun S_04_RegistroNegocioPreview() {
     FerretoolsTheme {
         val navController = rememberNavController()
         S_04_RegistroNegocio(
-            navController = navController,
-            ownerId = "123456"
+            navController = navController
         )
     }
 
